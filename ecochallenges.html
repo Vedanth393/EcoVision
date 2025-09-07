@@ -6,8 +6,6 @@
     <title>Eco Challenges - EcoVision AI</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -35,13 +33,7 @@
             padding: 30px;
             margin-bottom: 30px;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-            animation: slideDown 0.5s ease;
             text-align: center;
-        }
-
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-30px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         .header h1 {
@@ -107,12 +99,6 @@
             border-radius: 16px;
             padding: 30px;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-            animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
         }
 
         .card h2 {
@@ -122,15 +108,6 @@
             color: #e0e1dd;
             border-bottom: 2px solid #2e6a4d;
             padding-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .time-remaining {
-            font-size: 0.9rem;
-            opacity: 0.8;
-            font-weight: normal;
         }
 
         .challenge-item {
@@ -143,12 +120,6 @@
             justify-content: space-between;
             align-items: center;
             transition: all 0.3s ease;
-            animation: slideIn 0.5s ease;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-30px); }
-            to { opacity: 1; transform: translateX(0); }
         }
 
         .challenge-item:hover {
@@ -198,16 +169,6 @@
             justify-content: space-between;
             font-size: 0.85rem;
             opacity: 0.8;
-        }
-
-        .progress-percentage {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: white;
-            font-size: 0.7rem;
-            font-weight: bold;
         }
 
         .challenge-actions {
@@ -281,24 +242,13 @@
             opacity: 0.8;
         }
 
-        .achievement-icon {
-            font-size: 2rem;
-            margin-bottom: 8px;
-        }
-
         .achievement.locked {
             opacity: 0.5;
             filter: grayscale(1);
         }
 
         .achievement.unlocked {
-            animation: shine 2s infinite;
             border: 2px solid #2e6a4d;
-        }
-
-        @keyframes shine {
-            0%, 100% { box-shadow: 0 0 10px rgba(46, 106, 77, 0.5); }
-            50% { box-shadow: 0 0 20px rgba(46, 106, 77, 0.8); }
         }
 
         .sidebar {
@@ -327,20 +277,27 @@
             margin-top: 10px;
         }
 
-        .stat-item {
+        .impact-stats {
             display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            justify-content: space-around;
+            margin: 20px 0;
+            text-align: center;
         }
 
-        .stat-item:last-child {
-            border-bottom: none;
+        .impact-stat {
+            padding: 15px;
         }
 
-        .stat-value {
-            font-weight: 600;
+        .impact-value {
+            font-size: 1.8rem;
+            font-weight: 700;
             color: #2e6a4d;
+            margin: 5px 0;
+        }
+
+        .impact-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
         }
 
         .special-challenge {
@@ -407,12 +364,6 @@
             max-width: 500px;
             width: 90%;
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-            animation: modalFadeIn 0.3s ease;
-        }
-
-        @keyframes modalFadeIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
         }
 
         .modal-header {
@@ -483,29 +434,6 @@
             margin-bottom: 10px;
         }
 
-        .impact-stats {
-            display: flex;
-            justify-content: space-around;
-            margin: 20px 0;
-            text-align: center;
-        }
-
-        .impact-stat {
-            padding: 15px;
-        }
-
-        .impact-value {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #2e6a4d;
-            margin: 5px 0;
-        }
-
-        .impact-label {
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-
         @media (max-width: 900px) {
             .dashboard-grid {
                 grid-template-columns: 1fr;
@@ -540,10 +468,7 @@
         <div class="dashboard-grid">
             <div class="main-content">
                 <div class="card">
-                    <h2>
-                        Weekly Challenges
-                        <span class="time-remaining" id="weekly-time-remaining">6 days 23h remaining</span>
-                    </h2>
+                    <h2>Weekly Challenges</h2>
                     
                     <div class="challenge-item">
                         <div class="challenge-content">
@@ -552,9 +477,7 @@
                             <p>Use only sustainable transportation for 7 days. Walking, cycling, and public transport all count!</p>
                             <div class="progress-container">
                                 <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 0%" id="transport-progress">
-                                        <span class="progress-percentage">0%</span>
-                                    </div>
+                                    <div class="progress-fill" id="transport-progress" style="width: 0%"></div>
                                 </div>
                                 <div class="progress-text">
                                     <span>Started: <span id="transport-start">-</span></span>
@@ -564,7 +487,7 @@
                         </div>
                         <div class="challenge-actions">
                             <span class="points-badge">+50 pts</span>
-                            <button class="join-btn" onclick="updateProgress('transport', 1)">Log Day</button>
+                            <button class="join-btn" id="transport-btn">Log Day</button>
                         </div>
                     </div>
                     
@@ -575,9 +498,7 @@
                             <p>Correctly sort 20 items using our AI waste classifier. Help reduce contamination in recycling streams!</p>
                             <div class="progress-container">
                                 <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 0%" id="recycling-progress">
-                                        <span class="progress-percentage">0%</span>
-                                    </div>
+                                    <div class="progress-fill" id="recycling-progress" style="width: 0%"></div>
                                 </div>
                                 <div class="progress-text">
                                     <span>0 items sorted</span>
@@ -587,7 +508,7 @@
                         </div>
                         <div class="challenge-actions">
                             <span class="points-badge">+30 pts</span>
-                            <button class="join-btn" onclick="updateProgress('recycling', 1)">Add Item</button>
+                            <button class="join-btn" id="recycling-btn">Add Item</button>
                         </div>
                     </div>
                     
@@ -598,9 +519,7 @@
                             <p>Reduce your energy usage by 20% this week. Turn off lights, unplug devices, and use energy-efficient appliances.</p>
                             <div class="progress-container">
                                 <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 0%" id="energy-progress">
-                                        <span class="progress-percentage">0%</span>
-                                    </div>
+                                    <div class="progress-fill" id="energy-progress" style="width: 0%"></div>
                                 </div>
                                 <div class="progress-text">
                                     <span>Current reduction: 0%</span>
@@ -610,7 +529,7 @@
                         </div>
                         <div class="challenge-actions">
                             <span class="points-badge">+40 pts</span>
-                            <button class="join-btn" onclick="showEnergyModal()">Log Savings</button>
+                            <button class="join-btn" id="energy-btn">Log Savings</button>
                         </div>
                     </div>
                     
@@ -621,9 +540,7 @@
                             <p>Contribute to reforestation efforts by planting a tree or donating to a verified tree-planting organization.</p>
                             <div class="progress-container">
                                 <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 0%" id="tree-progress">
-                                        <span class="progress-percentage">0%</span>
-                                    </div>
+                                    <div class="progress-fill" id="tree-progress" style="width: 0%"></div>
                                 </div>
                                 <div class="progress-text">
                                     <span>Planted: 0 trees</span>
@@ -633,7 +550,7 @@
                         </div>
                         <div class="challenge-actions">
                             <span class="points-badge">+100 pts</span>
-                            <button class="join-btn" onclick="updateProgress('tree', 1)">Log Tree</button>
+                            <button class="join-btn" id="tree-btn">Log Tree</button>
                         </div>
                     </div>
 
@@ -644,9 +561,7 @@
                             <p>Save 100 gallons of water this week by taking shorter showers, fixing leaks, and using water-efficient fixtures.</p>
                             <div class="progress-container">
                                 <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 0%" id="water-progress">
-                                        <span class="progress-percentage">0%</span>
-                                    </div>
+                                    <div class="progress-fill" id="water-progress" style="width: 0%"></div>
                                 </div>
                                 <div class="progress-text">
                                     <span>Saved: 0 gallons</span>
@@ -656,31 +571,26 @@
                         </div>
                         <div class="challenge-actions">
                             <span class="points-badge">+60 pts</span>
-                            <button class="join-btn" onclick="showWaterModal()">Log Savings</button>
+                            <button class="join-btn" id="water-btn">Log Savings</button>
                         </div>
                     </div>
                 </div>
 
                 <div class="card">
-                    <h2>
-                        Monthly Special Challenge
-                        <span class="time-remaining" id="monthly-time-remaining">27 days remaining</span>
-                    </h2>
+                    <h2>Monthly Special Challenge</h2>
                     <div class="special-challenge">
                         <h3>Climate Action Hero</h3>
                         <p>Complete all weekly challenges this month to earn this exclusive badge and maximize your environmental impact!</p>
                         <div class="progress-container">
                             <div class="progress-bar">
-                                <div class="progress-fill" style="width: 0%; background: #e9c46a;" id="monthly-progress">
-                                    <span class="progress-percentage">0%</span>
-                                </div>
+                                <div class="progress-fill" id="monthly-progress" style="width: 0%; background: #e9c46a;"></div>
                             </div>
                             <div class="progress-text">
                                 <span>Time remaining: <span id="monthly-days-left">27</span> days</span>
                                 <span id="monthly-challenges">0/5 challenges</span>
                             </div>
                         </div>
-                        <button class="join-btn" style="margin-top: 15px;" onclick="showMonthlyChallenge()">View Details</button>
+                        <button class="join-btn" style="margin-top: 15px;" id="monthly-btn">View Details</button>
                     </div>
                 </div>
 
@@ -689,7 +599,7 @@
                     <div class="chart-container">
                         <canvas id="savings-chart"></canvas>
                     </div>
-                    <button class="export-btn" onclick="exportProgressPDF()">
+                    <button class="export-btn" id="export-btn">
                         Export Progress Report
                     </button>
                 </div>
@@ -717,33 +627,27 @@
                 <div class="card">
                     <h2>Your Achievements</h2>
                     <div class="achievements-grid">
-                        <div class="achievement locked" onclick="showAchievement('First Recycler')">
-                            <div class="achievement-icon">♻️</div>
+                        <div class="achievement locked" data-achievement="First Recycler">
                             <h4>First Recycler</h4>
                             <p>Recycled your first item</p>
                         </div>
-                        <div class="achievement locked" onclick="showAchievement('Week Warrior')">
-                            <div class="achievement-icon">⭐</div>
+                        <div class="achievement locked" data-achievement="Week Warrior">
                             <h4>Week Warrior</h4>
                             <p>Completed a weekly challenge</p>
                         </div>
-                        <div class="achievement locked" onclick="showAchievement('Earth Protector')">
-                            <div class="achievement-icon">🌍</div>
+                        <div class="achievement locked" data-achievement="Earth Protector">
                             <h4>Earth Protector</h4>
                             <p>Saved 50kg of CO₂</p>
                         </div>
-                        <div class="achievement locked" onclick="showAchievement('Waste Reducer')">
-                            <div class="achievement-icon">🗑️</div>
+                        <div class="achievement locked" data-achievement="Waste Reducer">
                             <h4>Waste Reducer</h4>
                             <p>Recycled 100 items</p>
                         </div>
-                        <div class="achievement locked" onclick="showAchievement('Carbon Cutter')">
-                            <div class="achievement-icon">📉</div>
+                        <div class="achievement locked" data-achievement="Carbon Cutter">
                             <h4>Carbon Cutter</h4>
                             <p>Reduce footprint by 25%</p>
                         </div>
-                        <div class="achievement locked" onclick="showAchievement('Tree Hugger')">
-                            <div class="achievement-icon">🌳</div>
+                        <div class="achievement locked" data-achievement="Tree Hugger">
                             <h4>Tree Hugger</h4>
                             <p>Planted 10 trees</p>
                         </div>
@@ -758,7 +662,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Log Energy Savings</h2>
-                <button class="close-modal" onclick="closeModal('energy-modal')">&times;</button>
+                <button class="close-modal">&times;</button>
             </div>
             <div class="modal-body">
                 <p>How much energy did you save today?</p>
@@ -771,8 +675,8 @@
                 <p>Your current energy reduction progress: <span id="current-energy">0</span>%</p>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal('energy-modal')">Cancel</button>
-                <button class="btn btn-primary" onclick="updateProgress('energy', parseInt(document.getElementById('energy-value').textContent))">Save</button>
+                <button class="btn btn-secondary" id="energy-cancel">Cancel</button>
+                <button class="btn btn-primary" id="energy-save">Save</button>
             </div>
         </div>
     </div>
@@ -781,7 +685,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Log Water Savings</h2>
-                <button class="close-modal" onclick="closeModal('water-modal')">&times;</button>
+                <button class="close-modal">&times;</button>
             </div>
             <div class="modal-body">
                 <p>How many gallons of water did you save today?</p>
@@ -791,8 +695,8 @@
                 <p>Your current water savings: <span id="current-water">0</span> gallons</p>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal('water-modal')">Cancel</button>
-                <button class="btn btn-primary" onclick="updateProgress('water', parseInt(document.getElementById('water-input').value))">Save</button>
+                <button class="btn btn-secondary" id="water-cancel">Cancel</button>
+                <button class="btn btn-primary" id="water-save">Save</button>
             </div>
         </div>
     </div>
@@ -801,32 +705,31 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="achievement-title">Achievement</h2>
-                <button class="close-modal" onclick="closeModal('achievement-modal')">&times;</button>
+                <button class="close-modal">&times;</button>
             </div>
             <div class="modal-body">
-                <div style="text-align: center; font-size: 3rem; margin: 20px 0;" id="achievement-icon">♻️</div>
                 <p id="achievement-description">Description of the achievement</p>
                 <div id="achievement-status" style="margin-top: 20px; padding: 10px; background: #415a77; border-radius: 8px; text-align: center;">
                     Status: Locked
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary" onclick="closeModal('achievement-modal')">Close</button>
+                <button class="btn btn-primary" id="achievement-close">Close</button>
             </div>
         </div>
     </div>
 
     <script>
-        // User data model - starting fresh
+        // User data model
         let userData = {
             points: 0,
             level: 1,
             challenges: {
-                transport: { current: 0, target: 7, points: 50, startDate: null },
-                recycling: { current: 0, target: 20, points: 30, startDate: null },
-                energy: { current: 0, target: 20, points: 40, startDate: null },
-                tree: { current: 0, target: 1, points: 100, startDate: null },
-                water: { current: 0, target: 100, points: 60, startDate: null }
+                transport: { current: 0, target: 7, points: 50 },
+                recycling: { current: 0, target: 20, points: 30 },
+                energy: { current: 0, target: 20, points: 40 },
+                tree: { current: 0, target: 1, points: 100 },
+                water: { current: 0, target: 100, points: 60 }
             },
             impact: {
                 co2: 0,
@@ -839,10 +742,6 @@
                 'Waste Reducer': { unlocked: false },
                 'Carbon Cutter': { unlocked: false },
                 'Tree Hugger': { unlocked: false }
-            },
-            history: {
-                weekly: [],
-                monthly: []
             }
         };
 
@@ -852,7 +751,10 @@
         // Initialize the page
         function initPage() {
             // Load user data from localStorage if available
-            loadUserData();
+            const savedData = localStorage.getItem('ecoChallengesData');
+            if (savedData) {
+                userData = JSON.parse(savedData);
+            }
             
             // Initialize the chart
             initChart();
@@ -860,18 +762,9 @@
             // Update all UI elements
             updateAllProgressBars();
             updateImpactStats();
-            updateTimeRemaining();
             
             // Set up event listeners
-            document.getElementById('energy-slider').addEventListener('input', function() {
-                document.getElementById('energy-value').textContent = this.value;
-            });
-            
-            // Set up automatic save every minute
-            setInterval(saveUserData, 60000);
-            
-            // Update time remaining every minute
-            setInterval(updateTimeRemaining, 60000);
+            setupEventListeners();
         }
 
         // Initialize the chart
@@ -880,8 +773,8 @@
             
             // Sample data for the chart
             const weeklyLabels = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
-            const co2Data = [12, 18, 25, 32];
-            const treeData = [1, 2, 3, 5];
+            const co2Data = [userData.impact.co2, userData.impact.co2 + 5, userData.impact.co2 + 12, userData.impact.co2 + 20];
+            const treeData = [userData.impact.trees, userData.impact.trees + 1, userData.impact.trees + 2, userData.impact.trees + 3];
             
             savingsChart = new Chart(ctx, {
                 type: 'bar',
@@ -937,45 +830,70 @@
             });
         }
 
+        // Set up event listeners
+        function setupEventListeners() {
+            // Challenge buttons
+            document.getElementById('transport-btn').addEventListener('click', () => updateProgress('transport', 1));
+            document.getElementById('recycling-btn').addEventListener('click', () => updateProgress('recycling', 1));
+            document.getElementById('energy-btn').addEventListener('click', showEnergyModal);
+            document.getElementById('tree-btn').addEventListener('click', () => updateProgress('tree', 1));
+            document.getElementById('water-btn').addEventListener('click', showWaterModal);
+            document.getElementById('monthly-btn').addEventListener('click', showMonthlyChallenge);
+            document.getElementById('export-btn').addEventListener('click', exportProgressPDF);
+            
+            // Energy modal
+            document.getElementById('energy-slider').addEventListener('input', function() {
+                document.getElementById('energy-value').textContent = this.value;
+            });
+            document.getElementById('energy-save').addEventListener('click', () => {
+                const value = parseInt(document.getElementById('energy-value').textContent);
+                updateProgress('energy', value);
+                closeModal('energy-modal');
+            });
+            document.querySelector('#energy-modal .close-modal').addEventListener('click', () => closeModal('energy-modal'));
+            document.getElementById('energy-cancel').addEventListener('click', () => closeModal('energy-modal'));
+            
+            // Water modal
+            document.getElementById('water-save').addEventListener('click', () => {
+                const value = parseInt(document.getElementById('water-input').value);
+                updateProgress('water', value);
+                closeModal('water-modal');
+            });
+            document.querySelector('#water-modal .close-modal').addEventListener('click', () => closeModal('water-modal'));
+            document.getElementById('water-cancel').addEventListener('click', () => closeModal('water-modal'));
+            
+            // Achievement modals
+            document.querySelectorAll('.achievement').forEach(achievement => {
+                achievement.addEventListener('click', () => {
+                    const achievementName = achievement.getAttribute('data-achievement');
+                    showAchievement(achievementName);
+                });
+            });
+            document.querySelector('#achievement-modal .close-modal').addEventListener('click', () => closeModal('achievement-modal'));
+            document.getElementById('achievement-close').addEventListener('click', () => closeModal('achievement-modal'));
+        }
+
         // Update progress for a specific challenge
         function updateProgress(challenge, value) {
-            // Set start date if this is the first time attempting this challenge
-            if (userData.challenges[challenge].current === 0 && !userData.challenges[challenge].startDate) {
-                userData.challenges[challenge].startDate = new Date().toISOString();
-                updateStartDateDisplay(challenge);
-            }
+            userData.challenges[challenge].current += value;
             
-            if (challenge === 'energy') {
-                // For energy, we set the value directly
-                userData.challenges[challenge].current = Math.min(
-                    userData.challenges[challenge].target,
-                    userData.challenges[challenge].current + value
-                );
-                closeModal('energy-modal');
-            } else if (challenge === 'water') {
-                // For water, add to current value
-                userData.challenges[challenge].current += value;
-                closeModal('water-modal');
-            } else {
-                // For others, increment by the value
-                userData.challenges[challenge].current += value;
+            // Make sure we don't exceed the target
+            if (userData.challenges[challenge].current > userData.challenges[challenge].target) {
+                userData.challenges[challenge].current = userData.challenges[challenge].target;
             }
             
             // Check if challenge is completed
             if (userData.challenges[challenge].current >= userData.challenges[challenge].target) {
-                if (!userData.challenges[challenge].completed) {
-                    userData.points += userData.challenges[challenge].points;
-                    userData.challenges[challenge].completed = true;
-                    
-                    // Check for achievements
-                    checkForAchievements();
-                    
-                    alert(`Challenge completed! You earned ${userData.challenges[challenge].points} points!`);
-                }
+                userData.points += userData.challenges[challenge].points;
+                
+                // Update impact stats based on challenge progress
+                updateImpactFromChallenge(challenge, value);
+                
+                // Check for achievements
+                checkForAchievements();
+                
+                alert(`Challenge completed! You earned ${userData.challenges[challenge].points} points!`);
             }
-            
-            // Update impact stats based on challenge progress
-            updateImpactFromChallenge(challenge, value);
             
             // Update the UI
             updateProgressBars();
@@ -993,10 +911,10 @@
         function updateImpactFromChallenge(challenge, value) {
             switch(challenge) {
                 case 'transport':
-                    userData.impact.co2 += 2.5; // Approx CO2 saved per car-free day
+                    userData.impact.co2 += 2.5 * value; // Approx CO2 saved per car-free day
                     break;
                 case 'recycling':
-                    userData.impact.co2 += 0.5; // Approx CO2 saved per recycled item
+                    userData.impact.co2 += 0.5 * value; // Approx CO2 saved per recycled item
                     break;
                 case 'energy':
                     userData.impact.co2 += value * 0.3; // Approx CO2 saved per % reduction
@@ -1009,6 +927,9 @@
                     userData.impact.co2 += value * 21.77; // Average tree absorbs 21.77kg CO2 per year
                     break;
             }
+            
+            // Update the chart with new data
+            updateChart();
         }
 
         // Update user level based on points
@@ -1035,4 +956,69 @@
         }
 
         // Check for achievements
-        function checkForAchievements
+        function checkForAchievements() {
+            // First Recycler
+            if (userData.challenges.recycling.current >= 1 && !userData.achievements['First Recycler'].unlocked) {
+                userData.achievements['First Recycler'].unlocked = true;
+                unlockAchievement('First Recycler');
+            }
+            
+            // Week Warrior (complete any weekly challenge)
+            const weeklyChallenges = ['transport', 'recycling', 'energy', 'tree', 'water'];
+            const completedWeekly = weeklyChallenges.some(challenge => 
+                userData.challenges[challenge].current >= userData.challenges[challenge].target
+            );
+            
+            if (completedWeekly && !userData.achievements['Week Warrior'].unlocked) {
+                userData.achievements['Week Warrior'].unlocked = true;
+                unlockAchievement('Week Warrior');
+            }
+            
+            // Earth Protector
+            if (userData.impact.co2 >= 50 && !userData.achievements['Earth Protector'].unlocked) {
+                userData.achievements['Earth Protector'].unlocked = true;
+                unlockAchievement('Earth Protector');
+            }
+            
+            // Waste Reducer
+            if (userData.challenges.recycling.current >= 100 && !userData.achievements['Waste Reducer'].unlocked) {
+                userData.achievements['Waste Reducer'].unlocked = true;
+                unlockAchievement('Waste Reducer');
+            }
+            
+            // Tree Hugger
+            if (userData.impact.trees >= 10 && !userData.achievements['Tree Hugger'].unlocked) {
+                userData.achievements['Tree Hugger'].unlocked = true;
+                unlockAchievement('Tree Hugger');
+            }
+        }
+
+        // Unlock an achievement
+        function unlockAchievement(achievementName) {
+            // Find the achievement element and update it
+            const achievementElement = document.querySelector(`[data-achievement="${achievementName}"]`);
+            if (achievementElement) {
+                achievementElement.classList.remove('locked');
+                achievementElement.classList.add('unlocked');
+            }
+            
+            alert(`Achievement unlocked: ${achievementName}!`);
+        }
+
+        // Update all progress bars
+        function updateAllProgressBars() {
+            updateProgressBars();
+            document.getElementById('total-points').textContent = userData.points;
+            updateUserLevel();
+        }
+
+        // Update progress bars based on userData
+        function updateProgressBars() {
+            // Transport challenge
+            const transportProgress = (userData.challenges.transport.current / userData.challenges.transport.target) * 100;
+            document.getElementById('transport-progress').style.width = `${transportProgress}%`;
+            document.getElementById('transport-days').textContent = `${userData.challenges.transport.current}/${userData.challenges.transport.target} days`;
+            
+            // Recycling challenge
+            const recyclingProgress = (userData.challenges.recycling.current / userData.challenges.recycling.target) * 100;
+           
