@@ -16,9 +16,9 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-color: #0a1929;
             min-height: 100vh;
-            color: #333;
+            color: #e0e0e0;
         }
 
         .app-container {
@@ -28,19 +28,18 @@
         }
 
         .header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            background-color: #132f4c;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             animation: slideDown 0.5s ease;
         }
 
         @keyframes slideDown {
             from {
                 opacity: 0;
-                transform: translateY(-30px);
+                transform: translateY(-20px);
             }
             to {
                 opacity: 1;
@@ -49,72 +48,50 @@
         }
 
         .header h1 {
-            color: #667eea;
-            font-size: 2.5em;
+            color: #66b2ff;
+            font-size: 2.2em;
             margin-bottom: 10px;
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
         }
 
         .eco-score {
-            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+            background-color: #2e7d32;
             color: white;
-            padding: 10px 20px;
-            border-radius: 50px;
+            padding: 8px 16px;
+            border-radius: 40px;
             font-size: 0.5em;
             font-weight: bold;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
         }
 
         .nav-tabs {
             display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
+            gap: 8px;
+            margin-bottom: 25px;
             flex-wrap: wrap;
         }
 
         .nav-tab {
-            background: rgba(255, 255, 255, 0.9);
+            background-color: #132f4c;
+            color: #b6c2cf;
             border: none;
-            padding: 15px 30px;
-            border-radius: 15px;
+            padding: 12px 24px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 1em;
-            font-weight: 600;
+            font-size: 0.95em;
+            font-weight: 500;
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .nav-tab::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: left 0.5s;
-        }
-
-        .nav-tab:hover::before {
-            left: 100%;
         }
 
         .nav-tab:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            background-color: #1e3a5c;
+            color: #ffffff;
         }
 
         .nav-tab.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background-color: #1e4976;
+            color: #ffffff;
         }
 
         .content-panel {
@@ -132,23 +109,22 @@
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            background-color: #132f4c;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 18px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease;
         }
 
         .card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-3px);
         }
 
         .camera-container {
             position: relative;
-            margin: 20px 0;
-            border-radius: 15px;
+            margin: 18px 0;
+            border-radius: 8px;
             overflow: hidden;
             background: #000;
         }
@@ -156,54 +132,33 @@
         #webcam, #uploadedImage {
             width: 100%;
             max-width: 600px;
-            border-radius: 15px;
+            border-radius: 8px;
             display: block;
             margin: 0 auto;
         }
 
         .capture-btn, .upload-btn, .analyze-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-color: #1e4976;
             color: white;
             border: none;
-            padding: 15px 40px;
-            border-radius: 50px;
-            font-size: 1.1em;
-            font-weight: 600;
+            padding: 12px 30px;
+            border-radius: 40px;
+            font-size: 1em;
+            font-weight: 500;
             cursor: pointer;
-            margin: 10px;
+            margin: 8px;
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .capture-btn::after, .upload-btn::after, .analyze-btn::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-
-        .capture-btn:hover::after, .upload-btn:hover::after, .analyze-btn:hover::after {
-            width: 300px;
-            height: 300px;
         }
 
         .capture-btn:hover, .upload-btn:hover, .analyze-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            background-color: #2a5c8f;
         }
 
         .result-container {
-            margin-top: 30px;
-            padding: 25px;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            border-radius: 15px;
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #1e3a5c;
+            border-radius: 8px;
             display: none;
             animation: slideUp 0.5s ease;
         }
@@ -211,7 +166,7 @@
         @keyframes slideUp {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(20px);
             }
             to {
                 opacity: 1;
@@ -225,10 +180,10 @@
 
         .waste-category {
             display: inline-block;
-            padding: 10px 20px;
-            border-radius: 10px;
-            font-weight: 600;
-            margin: 5px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 500;
+            margin: 4px;
             animation: bounceIn 0.5s ease;
         }
 
@@ -239,35 +194,35 @@
             100% { transform: scale(1); opacity: 1; }
         }
 
-        .recyclable { background: #4CAF50; color: white; }
-        .compost { background: #8BC34A; color: white; }
-        .landfill { background: #FF9800; color: white; }
-        .hazardous { background: #F44336; color: white; }
+        .recyclable { background-color: #2e7d32; color: white; }
+        .compost { background-color: #4c8c4a; color: white; }
+        .landfill { background-color: #757575; color: white; }
+        .hazardous { background-color: #c62828; color: white; }
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin: 20px 0;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin: 16px 0;
         }
 
         .stat-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-color: #1e4976;
             color: white;
-            padding: 25px;
-            border-radius: 15px;
+            padding: 20px;
+            border-radius: 8px;
             text-align: center;
             transition: transform 0.3s ease;
         }
 
         .stat-card:hover {
-            transform: scale(1.05);
+            transform: scale(1.03);
         }
 
         .stat-number {
-            font-size: 2.5em;
+            font-size: 2.2em;
             font-weight: bold;
-            margin: 10px 0;
+            margin: 8px 0;
             animation: countUp 1s ease;
         }
 
@@ -277,11 +232,11 @@
         }
 
         .challenge-item {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background-color: #1e4976;
             color: white;
-            padding: 20px;
-            border-radius: 15px;
-            margin: 10px 0;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 8px 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -289,93 +244,77 @@
         }
 
         .challenge-item:hover {
-            transform: translateX(10px);
+            transform: translateX(5px);
         }
 
         .progress-bar {
             width: 100%;
-            height: 30px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 15px;
+            height: 24px;
+            background-color: #1e3a5c;
+            border-radius: 12px;
             overflow: hidden;
-            margin: 10px 0;
+            margin: 8px 0;
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #84fab0 0%, #8fd3f4 100%);
-            border-radius: 15px;
+            background-color: #2e7d32;
+            border-radius: 12px;
             transition: width 1s ease;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-weight: bold;
+            font-weight: 500;
+            font-size: 0.85em;
         }
 
         .achievement {
             display: inline-block;
-            background: gold;
-            color: #333;
-            padding: 10px 20px;
-            border-radius: 50px;
-            margin: 5px;
-            font-weight: bold;
-            animation: shine 2s infinite;
-        }
-
-        @keyframes shine {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.8; }
+            background-color: #1e4976;
+            color: #e0e0e0;
+            padding: 8px 16px;
+            border-radius: 40px;
+            margin: 4px;
+            font-weight: 500;
         }
 
         .eco-tip {
-            background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+            background-color: #1e4976;
             color: white;
-            padding: 20px;
-            border-radius: 15px;
-            margin: 10px 0;
-            font-size: 1.1em;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 8px 0;
+            font-size: 1em;
             position: relative;
-            overflow: hidden;
-        }
-
-        .eco-tip::before {
-            content: '💡';
-            font-size: 3em;
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            opacity: 0.3;
         }
 
         .leaderboard-item {
             display: flex;
             align-items: center;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            margin: 10px 0;
+            padding: 12px;
+            background-color: #1e3a5c;
+            border-radius: 8px;
+            margin: 8px 0;
             transition: all 0.3s ease;
         }
 
         .leaderboard-item:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateX(5px);
+            background-color: #1e4976;
+            transform: translateX(3px);
         }
 
         .rank {
-            font-size: 1.5em;
+            font-size: 1.3em;
             font-weight: bold;
-            margin-right: 20px;
-            color: #667eea;
+            margin-right: 16px;
+            color: #66b2ff;
         }
 
         .chart-container {
             position: relative;
-            height: 400px;
-            margin: 20px 0;
+            height: 350px;
+            margin: 16px 0;
         }
 
         #fileInput {
@@ -385,7 +324,7 @@
         .loading {
             display: none;
             text-align: center;
-            padding: 20px;
+            padding: 16px;
         }
 
         .loading.show {
@@ -394,12 +333,12 @@
 
         .spinner {
             border: 4px solid rgba(0, 0, 0, 0.1);
-            border-top: 4px solid #667eea;
+            border-top: 4px solid #66b2ff;
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             animation: spin 1s linear infinite;
-            margin: 20px auto;
+            margin: 16px auto;
         }
 
         @keyframes spin {
@@ -408,16 +347,16 @@
         }
 
         .recommendation-card {
-            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
-            padding: 20px;
-            border-radius: 15px;
-            margin: 10px 0;
-            color: #333;
+            background-color: #1e4976;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 8px 0;
+            color: #e0e0e0;
         }
 
         @media (max-width: 768px) {
             .header h1 {
-                font-size: 1.8em;
+                font-size: 1.7em;
             }
             
             .nav-tabs {
@@ -434,18 +373,18 @@
     <div class="app-container">
         <div class="header">
             <h1>
-                🌍 EcoVision AI 
+                EcoVision AI 
                 <span class="eco-score">Eco Score: <span id="ecoScore">0</span></span>
             </h1>
             <p>Your AI-powered companion for sustainable living and waste reduction</p>
         </div>
 
         <div class="nav-tabs">
-            <button class="nav-tab active" data-tab="waste">🗑️ Waste Classifier</button>
-            <button class="nav-tab" data-tab="carbon">📊 Carbon Tracker</button>
-            <button class="nav-tab" data-tab="challenges">🏆 Eco Challenges</button>
-            <button class="nav-tab" data-tab="impact">📈 Impact Dashboard</button>
-            <button class="nav-tab" data-tab="community">👥 Community</button>
+            <button class="nav-tab active" data-tab="waste">Waste Classifier</button>
+            <button class="nav-tab" onclick="window.location.href='carbontracker.html'">Carbon Tracker</button>
+            <button class="nav-tab" onclick="window.location.href='ecochallenges.html'">Eco Challenges</button>
+            <button class="nav-tab" onclick="window.location.href='impactdashboard.html'">Impact Dashboard</button>
+            <button class="nav-tab" onclick="window.location.href='community.html'">Community</button>
         </div>
 
         <!-- Waste Classifier Panel -->
@@ -461,10 +400,10 @@
                 </div>
                 
                 <div style="text-align: center;">
-                    <button class="capture-btn" onclick="captureImage()">📸 Capture Image</button>
-                    <button class="upload-btn" onclick="document.getElementById('fileInput').click()">📁 Upload Image</button>
+                    <button class="capture-btn" onclick="captureImage()">Capture Image</button>
+                    <button class="upload-btn" onclick="document.getElementById('fileInput').click()">Upload Image</button>
                     <input type="file" id="fileInput" accept="image/*" onchange="handleFileUpload(event)">
-                    <button class="analyze-btn" onclick="analyzeWaste()" style="display:none;" id="analyzeBtn">🔍 Analyze Waste</button>
+                    <button class="analyze-btn" onclick="analyzeWaste()" style="display:none;" id="analyzeBtn">Analyze Waste</button>
                 </div>
                 
                 <div class="loading" id="loading">
@@ -483,255 +422,6 @@
             <div class="card">
                 <h3>Recent Classifications</h3>
                 <div id="recentClassifications"></div>
-            </div>
-        </div>
-
-        <!-- Carbon Tracker Panel -->
-        <div id="carbon" class="content-panel">
-            <div class="card">
-                <h2>Carbon Footprint Calculator</h2>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <h3>Daily CO₂</h3>
-                        <div class="stat-number" id="dailyCO2">0</div>
-                        <p>kg CO₂</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3>Weekly CO₂</h3>
-                        <div class="stat-number" id="weeklyCO2">0</div>
-                        <p>kg CO₂</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3>Trees to Offset</h3>
-                        <div class="stat-number" id="treesNeeded">0</div>
-                        <p>trees/year</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3>Savings</h3>
-                        <div class="stat-number" id="savings">0</div>
-                        <p>kg CO₂ saved</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3>Track Your Activities</h3>
-                <div style="margin: 20px 0;">
-                    <label>Transportation:</label>
-                    <select id="transport" onchange="updateCarbon()" style="padding: 10px; border-radius: 5px; margin: 10px;">
-                        <option value="0">Walking/Cycling</option>
-                        <option value="2.3">Public Transport</option>
-                        <option value="4.6">Car (Electric)</option>
-                        <option value="7.6">Car (Gasoline)</option>
-                        <option value="12">Car (SUV)</option>
-                    </select>
-                    <input type="number" id="transportDistance" placeholder="Distance (km)" onchange="updateCarbon()" 
-                           style="padding: 10px; border-radius: 5px; margin: 10px;">
-                </div>
-                
-                <div style="margin: 20px 0;">
-                    <label>Energy Usage:</label>
-                    <input type="number" id="energyUsage" placeholder="kWh per day" onchange="updateCarbon()"
-                           style="padding: 10px; border-radius: 5px; margin: 10px;">
-                </div>
-                
-                <div style="margin: 20px 0;">
-                    <label>Diet Type:</label>
-                    <select id="diet" onchange="updateCarbon()" style="padding: 10px; border-radius: 5px; margin: 10px;">
-                        <option value="2.5">Vegan</option>
-                        <option value="3.5">Vegetarian</option>
-                        <option value="5.5">Pescatarian</option>
-                        <option value="7.2">Regular</option>
-                        <option value="10">Heavy Meat</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3>CO₂ Emissions Trend</h3>
-                <div class="chart-container">
-                    <canvas id="carbonChart"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <!-- Eco Challenges Panel -->
-        <div id="challenges" class="content-panel">
-            <div class="card">
-                <h2>Weekly Eco Challenges</h2>
-                <div class="challenge-item">
-                    <div>
-                        <h3>🚶 Car-Free Week</h3>
-                        <p>Use only sustainable transportation for 7 days</p>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 43%">3/7 days</div>
-                        </div>
-                    </div>
-                    <span style="font-size: 1.5em;">+50 pts</span>
-                </div>
-                
-                <div class="challenge-item">
-                    <div>
-                        <h3>♻️ Recycling Master</h3>
-                        <p>Correctly sort 20 items</p>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 60%">12/20 items</div>
-                        </div>
-                    </div>
-                    <span style="font-size: 1.5em;">+30 pts</span>
-                </div>
-                
-                <div class="challenge-item">
-                    <div>
-                        <h3>💡 Energy Saver</h3>
-                        <p>Reduce energy usage by 20%</p>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 75%">15% reduced</div>
-                        </div>
-                    </div>
-                    <span style="font-size: 1.5em;">+40 pts</span>
-                </div>
-                
-                <div class="challenge-item">
-                    <div>
-                        <h3>🌱 Plant a Tree</h3>
-                        <p>Contribute to reforestation</p>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 100%">Completed!</div>
-                        </div>
-                    </div>
-                    <span style="font-size: 1.5em;">+100 pts</span>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3>Your Achievements</h3>
-                <div>
-                    <span class="achievement">🏅 First Recycler</span>
-                    <span class="achievement">🌟 Week Warrior</span>
-                    <span class="achievement">🌍 Earth Protector</span>
-                    <span class="achievement">♻️ Waste Reducer</span>
-                    <span class="achievement">🚴 Carbon Cutter</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Impact Dashboard Panel -->
-        <div id="impact" class="content-panel">
-            <div class="card">
-                <h2>Your Environmental Impact</h2>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <h3>Items Recycled</h3>
-                        <div class="stat-number">247</div>
-                        <p>this month</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3>CO₂ Saved</h3>
-                        <div class="stat-number">89.3</div>
-                        <p>kg CO₂</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3>Water Saved</h3>
-                        <div class="stat-number">1,250</div>
-                        <p>liters</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3>Trees Planted</h3>
-                        <div class="stat-number">12</div>
-                        <p>equivalent</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3>Impact Over Time</h3>
-                <div class="chart-container">
-                    <canvas id="impactChart"></canvas>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3>AI Recommendations</h3>
-                <div class="recommendation-card">
-                    <h4>🚗 Transportation Optimization</h4>
-                    <p>Based on your patterns, switching to public transport 2 days/week could save 45kg CO₂/month</p>
-                </div>
-                <div class="recommendation-card">
-                    <h4>⚡ Energy Efficiency</h4>
-                    <p>Your peak usage is 8-10pm. Shifting high-energy tasks earlier could reduce costs by 15%</p>
-                </div>
-                <div class="recommendation-card">
-                    <h4>🗑️ Waste Reduction</h4>
-                    <p>You're recycling 65% correctly. Focus on plastics #3-7 for improvement</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Community Panel -->
-        <div id="community" class="content-panel">
-            <div class="card">
-                <h2>Global Leaderboard</h2>
-                <div class="leaderboard-item">
-                    <span class="rank">1</span>
-                    <div style="flex-grow: 1;">
-                        <strong>EcoWarrior23</strong>
-                        <p>12,450 points • 523kg CO₂ saved</p>
-                    </div>
-                    <span>🏆</span>
-                </div>
-                <div class="leaderboard-item">
-                    <span class="rank">2</span>
-                    <div style="flex-grow: 1;">
-                        <strong>GreenThumb</strong>
-                        <p>11,200 points • 487kg CO₂ saved</p>
-                    </div>
-                    <span>🥈</span>
-                </div>
-                <div class="leaderboard-item">
-                    <span class="rank">3</span>
-                    <div style="flex-grow: 1;">
-                        <strong>PlanetSaver</strong>
-                        <p>10,800 points • 465kg CO₂ saved</p>
-                    </div>
-                    <span>🥉</span>
-                </div>
-                <div class="leaderboard-item" style="background: rgba(102, 126, 234, 0.2);">
-                    <span class="rank">47</span>
-                    <div style="flex-grow: 1;">
-                        <strong>You</strong>
-                        <p>3,250 points • 89kg CO₂ saved</p>
-                    </div>
-                    <span>⭐</span>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3>Community Impact</h3>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <h3>Total CO₂ Saved</h3>
-                        <div class="stat-number">45.2K</div>
-                        <p>tons this year</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3>Active Users</h3>
-                        <div class="stat-number">128K</div>
-                        <p>worldwide</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3>Daily Eco Tips</h3>
-                <div class="eco-tip">
-                    <strong>Today's Tip:</strong> Replace single-use plastic bags with reusable ones. 
-                    This simple switch can prevent 500+ plastic bags from entering landfills yearly!
-                </div>
-                <div class="eco-tip">
-                    <strong>Did You Know?</strong> Recycling one aluminum can saves enough energy 
-                    to power a TV for 3 hours. Start collecting cans today!
-                </div>
             </div>
         </div>
     </div>
@@ -762,15 +452,11 @@
             // Initialize camera
             initCamera();
             
-            // Initialize charts
-            initCharts();
-            
             // Load saved data
             loadUserData();
             
             // Update displays
             updateEcoScore();
-            updateCarbonDisplay();
             
             // Set up tab switching
             setupTabSwitching();
@@ -795,7 +481,9 @@
                     
                     // Show the selected content panel
                     const tabName = this.getAttribute('data-tab');
-                    document.getElementById(tabName).classList.add('active');
+                    if (tabName) {
+                        document.getElementById(tabName).classList.add('active');
+                    }
                 });
             });
         }
@@ -931,11 +619,11 @@
             
             // Classification badges
             const badges = {
-                recyclable: '<span class="waste-category recyclable">♻️ Recyclable</span>',
-                compost: '<span class="waste-category compost">🌱 Compostable</span>',
-                electronic: '<span class="waste-category hazardous">📱 E-Waste</span>',
-                hazardous: '<span class="waste-category hazardous">⚠️ Hazardous</span>',
-                landfill: '<span class="waste-category landfill">🗑️ Landfill</span>'
+                recyclable: '<span class="waste-category recyclable">Recyclable</span>',
+                compost: '<span class="waste-category compost">Compostable</span>',
+                electronic: '<span class="waste-category hazardous">E-Waste</span>',
+                hazardous: '<span class="waste-category hazardous">Hazardous</span>',
+                landfill: '<span class="waste-category landfill">Landfill</span>'
             };
             
             // Disposal instructions
@@ -1003,11 +691,11 @@
             }
             
             container.innerHTML = recent.map(item => `
-                <div style="display: flex; align-items: center; margin: 10px 0; padding: 10px; background: #f5f5f5; border-radius: 10px;">
-                    <img src="${item.image}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px; margin-right: 15px;">
+                <div style="display: flex; align-items: center; margin: 10px 0; padding: 10px; background: #1e3a5c; border-radius: 8px;">
+                    <img src="${item.image}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px; margin-right: 15px;">
                     <div>
                         <p><strong>${item.type.toUpperCase()}</strong></p>
-                        <p style="font-size: 0.8em; color: #666;">${item.timestamp}</p>
+                        <p style="font-size: 0.8em; color: #b6c2cf;">${item.timestamp}</p>
                     </div>
                 </div>
             `).join('');
@@ -1020,119 +708,6 @@
             
             // Save to localStorage
             localStorage.setItem('ecoScore', ecoScore);
-        }
-
-        // Update carbon footprint
-        function updateCarbon() {
-            const transport = parseFloat(document.getElementById('transport').value);
-            const distance = parseFloat(document.getElementById('transportDistance').value) || 0;
-            const energy = parseFloat(document.getElementById('energyUsage').value) || 0;
-            const diet = parseFloat(document.getElementById('diet').value);
-            
-            // Calculate daily CO2
-            const transportCO2 = transport * distance;
-            const energyCO2 = energy * 0.5; // kg CO2 per kWh
-            const dietCO2 = diet;
-            
-            const dailyCO2 = transportCO2 + energyCO2 + dietCO2;
-            
-            // Update displays
-            document.getElementById('dailyCO2').textContent = dailyCO2.toFixed(1);
-            document.getElementById('weeklyCO2').textContent = (dailyCO2 * 7).toFixed(1);
-            document.getElementById('treesNeeded').textContent = Math.ceil(dailyCO2 * 365 / 21.77); // Average tree absorbs 21.77kg CO2 per year
-            
-            // Save to data array
-            carbonData.daily.push(dailyCO2);
-            if (carbonData.daily.length > 7) carbonData.daily.shift();
-            
-            // Update chart
-            updateCarbonChart();
-            
-            // Save to localStorage
-            localStorage.setItem('carbonData', JSON.stringify(carbonData));
-        }
-
-        // Initialize charts
-        function initCharts() {
-            // Carbon chart
-            const carbonCtx = document.getElementById('carbonChart').getContext('2d');
-            window.carbonChart = new Chart(carbonCtx, {
-                type: 'line',
-                data: {
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                    datasets: [{
-                        label: 'Daily CO₂ (kg)',
-                        data: [5.2, 7.1, 6.5, 4.8, 8.2, 6.9, 5.5],
-                        borderColor: '#667eea',
-                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
-                        tension: 0.3,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'kg CO₂'
-                            }
-                        }
-                    }
-                }
-            });
-            
-            // Impact chart
-            const impactCtx = document.getElementById('impactChart').getContext('2d');
-            window.impactChart = new Chart(impactCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                    datasets: [
-                        {
-                            label: 'CO₂ Saved (kg)',
-                            data: [45, 52, 68, 74, 63, 89],
-                            backgroundColor: 'rgba(102, 126, 234, 0.7)'
-                        },
-                        {
-                            label: 'Items Recycled',
-                            data: [120, 145, 180, 165, 210, 247],
-                            backgroundColor: 'rgba(76, 175, 80, 0.7)'
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        }
-
-        // Update carbon chart
-        function updateCarbonChart() {
-            if (window.carbonChart) {
-                window.carbonChart.data.datasets[0].data = carbonData.daily.length > 0 ? 
-                    carbonData.daily : [5.2, 7.1, 6.5, 4.8, 8.2, 6.9, 5.5];
-                window.carbonChart.update();
-            }
-        }
-
-        // Update carbon display
-        function updateCarbonDisplay() {
-            document.getElementById('dailyCO2').textContent = carbonData.daily.length > 0 ? 
-                carbonData.daily[carbonData.daily.length - 1].toFixed(1) : '0';
-            
-            const weeklyCO2 = carbonData.daily.reduce((sum, value) => sum + value, 0);
-            document.getElementById('weeklyCO2').textContent = weeklyCO2.toFixed(1);
-            
-            document.getElementById('treesNeeded').textContent = Math.ceil((weeklyCO2 / 7) * 365 / 21.77);
         }
 
         // Load user data from localStorage
@@ -1149,14 +724,6 @@
             if (savedClassifications) {
                 classifications = JSON.parse(savedClassifications);
                 updateRecentClassifications();
-            }
-            
-            // Load carbon data
-            const savedCarbonData = localStorage.getItem('carbonData');
-            if (savedCarbonData) {
-                carbonData = JSON.parse(savedCarbonData);
-                updateCarbonChart();
-                updateCarbonDisplay();
             }
         }
 
