@@ -221,7 +221,6 @@
 
         .result-container.show {
             display: block;
-            animation: fadeIn 0.5s ease;
         }
 
         .waste-category {
@@ -442,11 +441,11 @@
         </div>
 
         <div class="nav-tabs">
-            <button class="nav-tab active" onclick="switchTab('waste')">🗑️ Waste Classifier</button>
-            <button class="nav-tab" onclick="switchTab('carbon')">📊 Carbon Tracker</button>
-            <button class="nav-tab" onclick="switchTab('challenges')">🏆 Eco Challenges</button>
-            <button class="nav-tab" onclick="switchTab('impact')">📈 Impact Dashboard</button>
-            <button class="nav-tab" onclick="switchTab('community')">👥 Community</button>
+            <button class="nav-tab active" data-tab="waste">🗑️ Waste Classifier</button>
+            <button class="nav-tab" data-tab="carbon">📊 Carbon Tracker</button>
+            <button class="nav-tab" data-tab="challenges">🏆 Eco Challenges</button>
+            <button class="nav-tab" data-tab="impact">📈 Impact Dashboard</button>
+            <button class="nav-tab" data-tab="community">👥 Community</button>
         </div>
 
         <!-- Waste Classifier Panel -->
@@ -568,7 +567,7 @@
                             <div class="progress-fill" style="width: 43%">3/7 days</div>
                         </div>
                     </div>
-                    <button class="nav-tab" style="padding: 8px 16px;" onclick="updateChallengeProgress('carFree', 1)">+1 Day</button>
+                    <span style="font-size: 1.5em;">+50 pts</span>
                 </div>
                 
                 <div class="challenge-item">
@@ -576,10 +575,10 @@
                         <h3>♻️ Recycling Master</h3>
                         <p>Correctly sort 20 items</p>
                         <div class="progress-bar">
-                            <div class="progress-fill" id="recyclingProgress" style="width: 60%">12/20 items</div>
+                            <div class="progress-fill" style="width: 60%">12/20 items</div>
                         </div>
                     </div>
-                    <button class="nav-tab" style="padding: 8px 16px;" onclick="updateChallengeProgress('recycling', 1)">+1 Item</button>
+                    <span style="font-size: 1.5em;">+30 pts</span>
                 </div>
                 
                 <div class="challenge-item">
@@ -590,7 +589,7 @@
                             <div class="progress-fill" style="width: 75%">15% reduced</div>
                         </div>
                     </div>
-                    <button class="nav-tab" style="padding: 8px 16px;" onclick="updateChallengeProgress('energy', 5)">+5%</button>
+                    <span style="font-size: 1.5em;">+40 pts</span>
                 </div>
                 
                 <div class="challenge-item">
@@ -614,9 +613,6 @@
                     <span class="achievement">♻️ Waste Reducer</span>
                     <span class="achievement">🚴 Carbon Cutter</span>
                 </div>
-                <div style="margin-top: 20px;">
-                    <button class="nav-tab" onclick="claimAchievement()">Claim Random Achievement</button>
-                </div>
             </div>
         </div>
 
@@ -627,22 +623,22 @@
                 <div class="stats-grid">
                     <div class="stat-card">
                         <h3>Items Recycled</h3>
-                        <div class="stat-number" id="itemsRecycled">247</div>
+                        <div class="stat-number">247</div>
                         <p>this month</p>
                     </div>
                     <div class="stat-card">
                         <h3>CO₂ Saved</h3>
-                        <div class="stat-number" id="co2Saved">89.3</div>
+                        <div class="stat-number">89.3</div>
                         <p>kg CO₂</p>
                     </div>
                     <div class="stat-card">
                         <h3>Water Saved</h3>
-                        <div class="stat-number" id="waterSaved">1,250</div>
+                        <div class="stat-number">1,250</div>
                         <p>liters</p>
                     </div>
                     <div class="stat-card">
                         <h3>Trees Planted</h3>
-                        <div class="stat-number" id="treesPlanted">12</div>
+                        <div class="stat-number">12</div>
                         <p>equivalent</p>
                     </div>
                 </div>
@@ -660,17 +656,14 @@
                 <div class="recommendation-card">
                     <h4>🚗 Transportation Optimization</h4>
                     <p>Based on your patterns, switching to public transport 2 days/week could save 45kg CO₂/month</p>
-                    <button class="nav-tab" style="margin-top: 10px; padding: 8px 16px;" onclick="applyRecommendation('transport')">Apply This</button>
                 </div>
                 <div class="recommendation-card">
                     <h4>⚡ Energy Efficiency</h4>
                     <p>Your peak usage is 8-10pm. Shifting high-energy tasks earlier could reduce costs by 15%</p>
-                    <button class="nav-tab" style="margin-top: 10px; padding: 8px 16px;" onclick="applyRecommendation('energy')">Apply This</button>
                 </div>
                 <div class="recommendation-card">
                     <h4>🗑️ Waste Reduction</h4>
                     <p>You're recycling 65% correctly. Focus on plastics #3-7 for improvement</p>
-                    <button class="nav-tab" style="margin-top: 10px; padding: 8px 16px;" onclick="applyRecommendation('waste')">Apply This</button>
                 </div>
             </div>
         </div>
@@ -707,7 +700,7 @@
                     <span class="rank">47</span>
                     <div style="flex-grow: 1;">
                         <strong>You</strong>
-                        <p id="userStats">3,250 points • 89kg CO₂ saved</p>
+                        <p>3,250 points • 89kg CO₂ saved</p>
                     </div>
                     <span>⭐</span>
                 </div>
@@ -727,9 +720,6 @@
                         <p>worldwide</p>
                     </div>
                 </div>
-                <div style="text-align: center; margin-top: 20px;">
-                    <button class="nav-tab" onclick="shareAchievements()">Share Your Achievements</button>
-                </div>
             </div>
 
             <div class="card">
@@ -741,9 +731,6 @@
                 <div class="eco-tip">
                     <strong>Did You Know?</strong> Recycling one aluminum can saves enough energy 
                     to power a TV for 3 hours. Start collecting cans today!
-                </div>
-                <div style="text-align: center; margin-top: 20px;">
-                    <button class="nav-tab" onclick="showRandomTip()">Show Another Tip</button>
                 </div>
             </div>
         </div>
@@ -758,21 +745,6 @@
             daily: [],
             weekly: [],
             monthly: []
-        };
-        
-        // Challenge progress tracking
-        let challengeProgress = {
-            carFree: 3,
-            recycling: 12,
-            energy: 15
-        };
-        
-        // User impact data
-        let userImpact = {
-            itemsRecycled: 247,
-            co2Saved: 89.3,
-            waterSaved: 1250,
-            treesPlanted: 12
         };
 
         // Initialize the app
@@ -799,6 +771,33 @@
             // Update displays
             updateEcoScore();
             updateCarbonDisplay();
+            
+            // Set up tab switching
+            setupTabSwitching();
+        }
+
+        // Set up tab switching functionality
+        function setupTabSwitching() {
+            const tabs = document.querySelectorAll('.nav-tab');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    tabs.forEach(t => t.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    // Hide all content panels
+                    document.querySelectorAll('.content-panel').forEach(panel => {
+                        panel.classList.remove('active');
+                    });
+                    
+                    // Show the selected content panel
+                    const tabName = this.getAttribute('data-tab');
+                    document.getElementById(tabName).classList.add('active');
+                });
+            });
         }
 
         // Camera initialization
@@ -815,25 +814,6 @@
                 const cameraContainer = document.querySelector('.camera-container');
                 cameraContainer.innerHTML = '<p style="color: white; padding: 20px; text-align: center;">Camera access is required for waste classification. Please enable camera permissions.</p>';
             }
-        }
-
-        // Tab switching
-        function switchTab(tabName) {
-            // Hide all panels
-            document.querySelectorAll('.content-panel').forEach(panel => {
-                panel.classList.remove('active');
-            });
-            
-            // Remove active class from all tabs
-            document.querySelectorAll('.nav-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // Show selected panel
-            document.getElementById(tabName).classList.add('active');
-            
-            // Add active class to clicked tab
-            event.target.classList.add('active');
         }
 
         // Capture image from webcam
@@ -906,11 +886,6 @@
                 
                 // Update eco score
                 updateEcoScore(10);
-                
-                // Update recycling challenge progress
-                if (wasteType === 'recyclable') {
-                    updateChallengeProgress('recycling', 1);
-                }
                 
                 loading.classList.remove('show');
                 resultContainer.classList.add('show');
@@ -1149,100 +1124,6 @@
             }
         }
 
-        // Update challenge progress
-        function updateChallengeProgress(challenge, amount) {
-            if (challengeProgress[challenge] !== undefined) {
-                challengeProgress[challenge] += amount;
-                
-                // Update UI
-                if (challenge === 'recycling') {
-                    document.getElementById('recyclingProgress').style.width = 
-                        `${(challengeProgress.recycling / 20) * 100}%`;
-                    document.getElementById('recyclingProgress').textContent = 
-                        `${challengeProgress.recycling}/20 items`;
-                }
-                
-                // Award points
-                updateEcoScore(amount * 5);
-                
-                // Save to localStorage
-                localStorage.setItem('challengeProgress', JSON.stringify(challengeProgress));
-            }
-        }
-
-        // Claim random achievement
-        function claimAchievement() {
-            const achievements = [
-                '🏅 First Recycler',
-                '🌟 Week Warrior',
-                '🌍 Earth Protector',
-                '♻️ Waste Reducer',
-                '🚴 Carbon Cutter',
-                '💧 Water Saver',
-                '🌳 Tree Hugger',
-                '⚡ Energy Master'
-            ];
-            
-            const randomAchievement = achievements[Math.floor(Math.random() * achievements.length)];
-            
-            // Show notification
-            alert(`Congratulations! You earned the achievement: ${randomAchievement}`);
-            
-            // Add to eco score
-            updateEcoScore(25);
-        }
-
-        // Apply recommendation
-        function applyRecommendation(type) {
-            let message = '';
-            let points = 0;
-            
-            switch(type) {
-                case 'transport':
-                    message = 'Transportation optimization applied! You\'ll save approximately 45kg CO₂ per month.';
-                    points = 30;
-                    break;
-                case 'energy':
-                    message = 'Energy efficiency plan applied! You could reduce your energy bill by 15%.';
-                    points = 25;
-                    break;
-                case 'waste':
-                    message = 'Waste reduction strategy applied! Focus on plastics #3-7 for better recycling.';
-                    points = 20;
-                    break;
-            }
-            
-            // Show message
-            alert(message);
-            
-            // Add to eco score
-            updateEcoScore(points);
-        }
-
-        // Share achievements
-        function shareAchievements() {
-            alert('Achievements shared to your social networks! 🌍\nKeep inspiring others to live sustainably!');
-            updateEcoScore(15);
-        }
-
-        // Show random eco tip
-        function showRandomTip() {
-            const tips = [
-                "Turning off lights when leaving a room can save up to 15% on energy bills.",
-                "A reusable water bottle can save an average of 156 plastic bottles annually.",
-                "Line drying clothes instead of using a dryer can save ⅓ of their carbon footprint.",
-                "Eating vegetarian one day a week can save the equivalent of driving 1,160 miles.",
-                "Fixing a leaky faucet can save up to 3,000 gallons of water per year.",
-                "Using public transportation reduces CO2 emissions by 45% compared to driving.",
-                "Planting a single tree can absorb up to 48 pounds of CO2 per year."
-            ];
-            
-            const randomTip = tips[Math.floor(Math.random() * tips.length)];
-            
-            // Show tip
-            alert(`💡 Eco Tip:\n\n${randomTip}`);
-        }
-
         // Update carbon display
         function updateCarbonDisplay() {
             document.getElementById('dailyCO2').textContent = carbonData.daily.length > 0 ? 
@@ -1276,20 +1157,6 @@
                 carbonData = JSON.parse(savedCarbonData);
                 updateCarbonChart();
                 updateCarbonDisplay();
-            }
-            
-            // Load challenge progress
-            const savedChallengeProgress = localStorage.getItem('challengeProgress');
-            if (savedChallengeProgress) {
-                challengeProgress = JSON.parse(savedChallengeProgress);
-                
-                // Update UI for challenges
-                if (document.getElementById('recyclingProgress')) {
-                    document.getElementById('recyclingProgress').style.width = 
-                        `${(challengeProgress.recycling / 20) * 100}%`;
-                    document.getElementById('recyclingProgress').textContent = 
-                        `${challengeProgress.recycling}/20 items`;
-                }
             }
         }
 
