@@ -221,6 +221,7 @@
 
         .result-container.show {
             display: block;
+            animation: fadeIn 0.5s ease;
         }
 
         .waste-category {
@@ -567,7 +568,7 @@
                             <div class="progress-fill" style="width: 43%">3/7 days</div>
                         </div>
                     </div>
-                    <span style="font-size: 1.5em;">+50 pts</span>
+                    <button class="nav-tab" style="padding: 8px 16px;" onclick="updateChallengeProgress('carFree', 1)">+1 Day</button>
                 </div>
                 
                 <div class="challenge-item">
@@ -575,10 +576,10 @@
                         <h3>♻️ Recycling Master</h3>
                         <p>Correctly sort 20 items</p>
                         <div class="progress-bar">
-                            <div class="progress-fill" style="width: 60%">12/20 items</div>
+                            <div class="progress-fill" id="recyclingProgress" style="width: 60%">12/20 items</div>
                         </div>
                     </div>
-                    <span style="font-size: 1.5em;">+30 pts</span>
+                    <button class="nav-tab" style="padding: 8px 16px;" onclick="updateChallengeProgress('recycling', 1)">+1 Item</button>
                 </div>
                 
                 <div class="challenge-item">
@@ -589,7 +590,7 @@
                             <div class="progress-fill" style="width: 75%">15% reduced</div>
                         </div>
                     </div>
-                    <span style="font-size: 1.5em;">+40 pts</span>
+                    <button class="nav-tab" style="padding: 8px 16px;" onclick="updateChallengeProgress('energy', 5)">+5%</button>
                 </div>
                 
                 <div class="challenge-item">
@@ -613,6 +614,9 @@
                     <span class="achievement">♻️ Waste Reducer</span>
                     <span class="achievement">🚴 Carbon Cutter</span>
                 </div>
+                <div style="margin-top: 20px;">
+                    <button class="nav-tab" onclick="claimAchievement()">Claim Random Achievement</button>
+                </div>
             </div>
         </div>
 
@@ -623,22 +627,22 @@
                 <div class="stats-grid">
                     <div class="stat-card">
                         <h3>Items Recycled</h3>
-                        <div class="stat-number">247</div>
+                        <div class="stat-number" id="itemsRecycled">247</div>
                         <p>this month</p>
                     </div>
                     <div class="stat-card">
                         <h3>CO₂ Saved</h3>
-                        <div class="stat-number">89.3</div>
+                        <div class="stat-number" id="co2Saved">89.3</div>
                         <p>kg CO₂</p>
                     </div>
                     <div class="stat-card">
                         <h3>Water Saved</h3>
-                        <div class="stat-number">1,250</div>
+                        <div class="stat-number" id="waterSaved">1,250</div>
                         <p>liters</p>
                     </div>
                     <div class="stat-card">
                         <h3>Trees Planted</h3>
-                        <div class="stat-number">12</div>
+                        <div class="stat-number" id="treesPlanted">12</div>
                         <p>equivalent</p>
                     </div>
                 </div>
@@ -656,14 +660,17 @@
                 <div class="recommendation-card">
                     <h4>🚗 Transportation Optimization</h4>
                     <p>Based on your patterns, switching to public transport 2 days/week could save 45kg CO₂/month</p>
+                    <button class="nav-tab" style="margin-top: 10px; padding: 8px 16px;" onclick="applyRecommendation('transport')">Apply This</button>
                 </div>
                 <div class="recommendation-card">
                     <h4>⚡ Energy Efficiency</h4>
                     <p>Your peak usage is 8-10pm. Shifting high-energy tasks earlier could reduce costs by 15%</p>
+                    <button class="nav-tab" style="margin-top: 10px; padding: 8px 16px;" onclick="applyRecommendation('energy')">Apply This</button>
                 </div>
                 <div class="recommendation-card">
                     <h4>🗑️ Waste Reduction</h4>
                     <p>You're recycling 65% correctly. Focus on plastics #3-7 for improvement</p>
+                    <button class="nav-tab" style="margin-top: 10px; padding: 8px 16px;" onclick="applyRecommendation('waste')">Apply This</button>
                 </div>
             </div>
         </div>
@@ -700,7 +707,7 @@
                     <span class="rank">47</span>
                     <div style="flex-grow: 1;">
                         <strong>You</strong>
-                        <p>3,250 points • 89kg CO₂ saved</p>
+                        <p id="userStats">3,250 points • 89kg CO₂ saved</p>
                     </div>
                     <span>⭐</span>
                 </div>
@@ -720,6 +727,9 @@
                         <p>worldwide</p>
                     </div>
                 </div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="nav-tab" onclick="shareAchievements()">Share Your Achievements</button>
+                </div>
             </div>
 
             <div class="card">
@@ -731,6 +741,9 @@
                 <div class="eco-tip">
                     <strong>Did You Know?</strong> Recycling one aluminum can saves enough energy 
                     to power a TV for 3 hours. Start collecting cans today!
+                </div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="nav-tab" onclick="showRandomTip()">Show Another Tip</button>
                 </div>
             </div>
         </div>
@@ -746,6 +759,21 @@
             weekly: [],
             monthly: []
         };
+        
+        // Challenge progress tracking
+        let challengeProgress = {
+            carFree: 3,
+            recycling: 12,
+            energy: 15
+        };
+        
+        // User impact data
+        let userImpact = {
+            itemsRecycled: 247,
+            co2Saved: 89.3,
+            waterSaved: 1250,
+            treesPlanted: 12
+        };
 
         // Initialize the app
         async function initApp() {
@@ -755,6 +783,8 @@
                 console.log('AI Model loaded successfully');
             } catch (error) {
                 console.error('Error loading model:', error);
+                // Fallback to mock classification if model fails to load
+                console.log('Using mock classification as fallback');
             }
 
             // Initialize camera
@@ -781,6 +811,9 @@
                 video.srcObject = stream;
             } catch (error) {
                 console.log('Camera not available:', error);
+                // Show a placeholder message
+                const cameraContainer = document.querySelector('.camera-container');
+                cameraContainer.innerHTML = '<p style="color: white; padding: 20px; text-align: center;">Camera access is required for waste classification. Please enable camera permissions.</p>';
             }
         }
 
@@ -850,7 +883,17 @@
                 const img = document.getElementById('uploadedImage');
                 
                 // Get AI predictions
-                const predictions = await model.classify(img);
+                let predictions;
+                if (model) {
+                    predictions = await model.classify(img);
+                } else {
+                    // Mock predictions if model failed to load
+                    predictions = [
+                        { className: 'plastic bottle', probability: 0.92 },
+                        { className: 'water bottle', probability: 0.87 },
+                        { className: 'container', probability: 0.75 }
+                    ];
+                }
                 
                 // Process predictions for waste classification
                 const wasteType = classifyWasteType(predictions);
@@ -864,12 +907,22 @@
                 // Update eco score
                 updateEcoScore(10);
                 
+                // Update recycling challenge progress
+                if (wasteType === 'recyclable') {
+                    updateChallengeProgress('recycling', 1);
+                }
+                
                 loading.classList.remove('show');
                 resultContainer.classList.add('show');
                 
             } catch (error) {
                 console.error('Error analyzing image:', error);
                 loading.classList.remove('show');
+                
+                // Show error message
+                document.getElementById('classificationResult').innerHTML = 
+                    '<p>Error analyzing image. Please try again.</p>';
+                resultContainer.classList.add('show');
             }
         }
 
@@ -921,66 +974,68 @@
             
             // Eco alternatives
             const alternatives = {
-                recyclable: '💡 Consider using reusable alternatives like metal water bottles or cloth bags.',
-                compost: '💡 Start a home garden and create nutrient-rich soil from your compost!',
-                electronic: '💡 Consider donating working electronics or buying refurbished in the future.',
-                hazardous: '💡 Look for eco-friendly alternatives and rechargeable options.',
-                landfill: '💡 Try to find reusable or recyclable alternatives to reduce landfill waste.'
+                recyclable: 'Consider reusable alternatives to reduce packaging waste.',
+                compost: 'Start a home compost bin for your food scraps to create nutrient-rich soil.',
+                electronic: 'Repair or donate electronics before recycling. Many devices can be refurbished.',
+                hazardous: 'Look for non-toxic alternatives to hazardous household products.',
+                landfill: 'Try to reduce consumption of single-use items that end up in landfill.'
             };
             
+            // Update the UI
             resultDiv.innerHTML = `
-                <p><strong>Item Detected:</strong> ${predictions[0]?.className || 'Unknown'} 
-                (${Math.round(predictions[0]?.probability * 100 || 0)}% confidence)</p>
-                ${badges[wasteType]}
+                <p>Detected: <strong>${predictions[0]?.className || 'Unknown item'}</strong></p>
+                <p>Waste Category: ${badges[wasteType] || badges.landfill}</p>
+                <p>Confidence: ${(predictions[0]?.probability * 100).toFixed(2) || 'Unknown'}%</p>
             `;
             
             instructionsDiv.innerHTML = `
                 <h4>Disposal Instructions:</h4>
-                <p>${instructions[wasteType]}</p>
+                <p>${instructions[wasteType] || instructions.landfill}</p>
             `;
             
             suggestionsDiv.innerHTML = `
-                <div class="eco-tip" style="margin-top: 15px;">
-                    ${alternatives[wasteType]}
-                </div>
+                <h4>Eco-Friendly Alternatives:</h4>
+                <p>${alternatives[wasteType] || alternatives.landfill}</p>
             `;
+        }
+
+        // Save classification to history
+        function saveClassification(wasteType) {
+            const item = document.getElementById('uploadedImage').src;
+            const timestamp = new Date().toLocaleString();
             
-            // Add to recent classifications
-            updateRecentClassifications(predictions[0]?.className, wasteType);
+            classifications.unshift({
+                type: wasteType,
+                image: item,
+                timestamp: timestamp
+            });
+            
+            // Update recent classifications
+            updateRecentClassifications();
+            
+            // Save to localStorage
+            localStorage.setItem('classifications', JSON.stringify(classifications));
         }
 
         // Update recent classifications display
-        function updateRecentClassifications(item, category) {
-            classifications.unshift({ item, category, date: new Date() });
-            classifications = classifications.slice(0, 5); // Keep only last 5
+        function updateRecentClassifications() {
+            const container = document.getElementById('recentClassifications');
+            const recent = classifications.slice(0, 5);
             
-            const recentDiv = document.getElementById('recentClassifications');
-            recentDiv.innerHTML = classifications.map(c => `
-                <div style="padding: 10px; margin: 5px 0; background: rgba(102, 126, 234, 0.1); border-radius: 10px;">
-                    <strong>${c.item}</strong> - ${c.category}
-                    <span style="float: right; color: #666;">${formatTime(c.date)}</span>
+            if (recent.length === 0) {
+                container.innerHTML = '<p>No recent classifications yet.</p>';
+                return;
+            }
+            
+            container.innerHTML = recent.map(item => `
+                <div style="display: flex; align-items: center; margin: 10px 0; padding: 10px; background: #f5f5f5; border-radius: 10px;">
+                    <img src="${item.image}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px; margin-right: 15px;">
+                    <div>
+                        <p><strong>${item.type.toUpperCase()}</strong></p>
+                        <p style="font-size: 0.8em; color: #666;">${item.timestamp}</p>
+                    </div>
                 </div>
             `).join('');
-        }
-
-        // Format time for display
-        function formatTime(date) {
-            const mins = Math.floor((new Date() - date) / 60000);
-            if (mins < 1) return 'Just now';
-            if (mins < 60) return `${mins} min ago`;
-            return `${Math.floor(mins / 60)} hours ago`;
-        }
-
-        // Save classification to storage
-        function saveClassification(wasteType) {
-            const data = {
-                type: wasteType,
-                timestamp: new Date().toISOString(),
-                points: 10
-            };
-            
-            // In a real app, this would save to a database
-            console.log('Classification saved:', data);
         }
 
         // Update eco score
@@ -988,198 +1043,258 @@
             ecoScore += points;
             document.getElementById('ecoScore').textContent = ecoScore;
             
-            // Animate the score change
-            const scoreElement = document.getElementById('ecoScore');
-            scoreElement.style.transform = 'scale(1.5)';
-            setTimeout(() => {
-                scoreElement.style.transform = 'scale(1)';
-            }, 300);
+            // Save to localStorage
+            localStorage.setItem('ecoScore', ecoScore);
         }
 
-        // Carbon tracking functions
+        // Update carbon footprint
         function updateCarbon() {
-            const transport = parseFloat(document.getElementById('transport').value) || 0;
+            const transport = parseFloat(document.getElementById('transport').value);
             const distance = parseFloat(document.getElementById('transportDistance').value) || 0;
             const energy = parseFloat(document.getElementById('energyUsage').value) || 0;
-            const diet = parseFloat(document.getElementById('diet').value) || 0;
+            const diet = parseFloat(document.getElementById('diet').value);
             
             // Calculate daily CO2
             const transportCO2 = transport * distance;
-            const energyCO2 = energy * 0.5; // Average CO2 per kWh
+            const energyCO2 = energy * 0.5; // kg CO2 per kWh
             const dietCO2 = diet;
             
-            const dailyTotal = transportCO2 + energyCO2 + dietCO2;
+            const dailyCO2 = transportCO2 + energyCO2 + dietCO2;
             
             // Update displays
-            document.getElementById('dailyCO2').textContent = dailyTotal.toFixed(1);
-            document.getElementById('weeklyCO2').textContent = (dailyTotal * 7).toFixed(1);
-            document.getElementById('treesNeeded').textContent = Math.ceil(dailyTotal * 365 / 21); // One tree absorbs ~21kg CO2/year
+            document.getElementById('dailyCO2').textContent = dailyCO2.toFixed(1);
+            document.getElementById('weeklyCO2').textContent = (dailyCO2 * 7).toFixed(1);
+            document.getElementById('treesNeeded').textContent = Math.ceil(dailyCO2 * 365 / 21.77); // Average tree absorbs 21.77kg CO2 per year
             
-            // Calculate savings (compared to average)
-            const avgDaily = 30; // Average person produces 30kg CO2/day
-            const savings = Math.max(0, avgDaily - dailyTotal);
-            document.getElementById('savings').textContent = savings.toFixed(1);
+            // Save to data array
+            carbonData.daily.push(dailyCO2);
+            if (carbonData.daily.length > 7) carbonData.daily.shift();
             
             // Update chart
-            updateCarbonChart(dailyTotal);
+            updateCarbonChart();
             
-            // Award points for low carbon
-            if (dailyTotal < 20) {
-                updateEcoScore(5);
-            }
-        }
-
-        // Update carbon chart
-        function updateCarbonChart(value) {
-            if (window.carbonChart) {
-                const labels = window.carbonChart.data.labels;
-                const data = window.carbonChart.data.datasets[0].data;
-                
-                // Add new data point
-                const now = new Date();
-                labels.push(now.toLocaleTimeString());
-                data.push(value);
-                
-                // Keep only last 10 points
-                if (labels.length > 10) {
-                    labels.shift();
-                    data.shift();
-                }
-                
-                window.carbonChart.update();
-            }
+            // Save to localStorage
+            localStorage.setItem('carbonData', JSON.stringify(carbonData));
         }
 
         // Initialize charts
         function initCharts() {
-            // Carbon emissions chart
-            const carbonCtx = document.getElementById('carbonChart');
-            if (carbonCtx) {
-                window.carbonChart = new Chart(carbonCtx, {
-                    type: 'line',
-                    data: {
-                        labels: [],
-                        datasets: [{
-                            label: 'CO₂ Emissions (kg)',
-                            data: [],
-                            borderColor: 'rgb(102, 126, 234)',
-                            backgroundColor: 'rgba(102, 126, 234, 0.1)',
-                            tension: 0.4
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
+            // Carbon chart
+            const carbonCtx = document.getElementById('carbonChart').getContext('2d');
+            window.carbonChart = new Chart(carbonCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Daily CO₂ (kg)',
+                        data: [5.2, 7.1, 6.5, 4.8, 8.2, 6.9, 5.5],
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
                                 display: true,
-                                position: 'top'
-                            }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true
+                                text: 'kg CO₂'
                             }
                         }
                     }
-                });
-            }
+                }
+            });
             
             // Impact chart
-            const impactCtx = document.getElementById('impactChart');
-            if (impactCtx) {
-                new Chart(impactCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                        datasets: [
-                            {
-                                label: 'Items Recycled',
-                                data: [12, 19, 8, 15, 22, 18, 25],
-                                backgroundColor: 'rgba(76, 175, 80, 0.6)'
-                            },
-                            {
-                                label: 'CO₂ Saved (kg)',
-                                data: [8, 12, 6, 9, 15, 11, 18],
-                                backgroundColor: 'rgba(102, 126, 234, 0.6)'
-                            }
-                        ]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'top'
-                            }
+            const impactCtx = document.getElementById('impactChart').getContext('2d');
+            window.impactChart = new Chart(impactCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [
+                        {
+                            label: 'CO₂ Saved (kg)',
+                            data: [45, 52, 68, 74, 63, 89],
+                            backgroundColor: 'rgba(102, 126, 234, 0.7)'
                         },
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
+                        {
+                            label: 'Items Recycled',
+                            data: [120, 145, 180, 165, 210, 247],
+                            backgroundColor: 'rgba(76, 175, 80, 0.7)'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
                         }
                     }
-                });
+                }
+            });
+        }
+
+        // Update carbon chart
+        function updateCarbonChart() {
+            if (window.carbonChart) {
+                window.carbonChart.data.datasets[0].data = carbonData.daily.length > 0 ? 
+                    carbonData.daily : [5.2, 7.1, 6.5, 4.8, 8.2, 6.9, 5.5];
+                window.carbonChart.update();
             }
+        }
+
+        // Update challenge progress
+        function updateChallengeProgress(challenge, amount) {
+            if (challengeProgress[challenge] !== undefined) {
+                challengeProgress[challenge] += amount;
+                
+                // Update UI
+                if (challenge === 'recycling') {
+                    document.getElementById('recyclingProgress').style.width = 
+                        `${(challengeProgress.recycling / 20) * 100}%`;
+                    document.getElementById('recyclingProgress').textContent = 
+                        `${challengeProgress.recycling}/20 items`;
+                }
+                
+                // Award points
+                updateEcoScore(amount * 5);
+                
+                // Save to localStorage
+                localStorage.setItem('challengeProgress', JSON.stringify(challengeProgress));
+            }
+        }
+
+        // Claim random achievement
+        function claimAchievement() {
+            const achievements = [
+                '🏅 First Recycler',
+                '🌟 Week Warrior',
+                '🌍 Earth Protector',
+                '♻️ Waste Reducer',
+                '🚴 Carbon Cutter',
+                '💧 Water Saver',
+                '🌳 Tree Hugger',
+                '⚡ Energy Master'
+            ];
+            
+            const randomAchievement = achievements[Math.floor(Math.random() * achievements.length)];
+            
+            // Show notification
+            alert(`Congratulations! You earned the achievement: ${randomAchievement}`);
+            
+            // Add to eco score
+            updateEcoScore(25);
+        }
+
+        // Apply recommendation
+        function applyRecommendation(type) {
+            let message = '';
+            let points = 0;
+            
+            switch(type) {
+                case 'transport':
+                    message = 'Transportation optimization applied! You\'ll save approximately 45kg CO₂ per month.';
+                    points = 30;
+                    break;
+                case 'energy':
+                    message = 'Energy efficiency plan applied! You could reduce your energy bill by 15%.';
+                    points = 25;
+                    break;
+                case 'waste':
+                    message = 'Waste reduction strategy applied! Focus on plastics #3-7 for better recycling.';
+                    points = 20;
+                    break;
+            }
+            
+            // Show message
+            alert(message);
+            
+            // Add to eco score
+            updateEcoScore(points);
+        }
+
+        // Share achievements
+        function shareAchievements() {
+            alert('Achievements shared to your social networks! 🌍\nKeep inspiring others to live sustainably!');
+            updateEcoScore(15);
+        }
+
+        // Show random eco tip
+        function showRandomTip() {
+            const tips = [
+                "Turning off lights when leaving a room can save up to 15% on energy bills.",
+                "A reusable water bottle can save an average of 156 plastic bottles annually.",
+                "Line drying clothes instead of using a dryer can save ⅓ of their carbon footprint.",
+                "Eating vegetarian one day a week can save the equivalent of driving 1,160 miles.",
+                "Fixing a leaky faucet can save up to 3,000 gallons of water per year.",
+                "Using public transportation reduces CO2 emissions by 45% compared to driving.",
+                "Planting a single tree can absorb up to 48 pounds of CO2 per year."
+            ];
+            
+            const randomTip = tips[Math.floor(Math.random() * tips.length)];
+            
+            // Show tip
+            alert(`💡 Eco Tip:\n\n${randomTip}`);
         }
 
         // Update carbon display
         function updateCarbonDisplay() {
-            // Simulate some initial data
-            carbonData.daily = [15, 18, 12, 20, 16, 14, 19];
-            carbonData.weekly = carbonData.daily.reduce((a, b) => a + b, 0);
+            document.getElementById('dailyCO2').textContent = carbonData.daily.length > 0 ? 
+                carbonData.daily[carbonData.daily.length - 1].toFixed(1) : '0';
             
-            // Update weekly average
-            const weeklyAvg = (carbonData.weekly / 7).toFixed(1);
-            document.getElementById('dailyCO2').textContent = weeklyAvg;
-            document.getElementById('weeklyCO2').textContent = carbonData.weekly.toFixed(1);
+            const weeklyCO2 = carbonData.daily.reduce((sum, value) => sum + value, 0);
+            document.getElementById('weeklyCO2').textContent = weeklyCO2.toFixed(1);
+            
+            document.getElementById('treesNeeded').textContent = Math.ceil((weeklyCO2 / 7) * 365 / 21.77);
         }
 
-        // Load user data
+        // Load user data from localStorage
         function loadUserData() {
-            // In a real app, this would load from a database
-            // For now, we'll use some demo data
-            ecoScore = 3250;
-            document.getElementById('ecoScore').textContent = ecoScore;
-        }
-
-        // Initialize app when page loads
-        window.addEventListener('load', initApp);
-
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'c' && e.ctrlKey) {
-                captureImage();
+            // Load eco score
+            const savedEcoScore = localStorage.getItem('ecoScore');
+            if (savedEcoScore) {
+                ecoScore = parseInt(savedEcoScore);
+                document.getElementById('ecoScore').textContent = ecoScore;
             }
-        });
-
-        // Add some particle effects for visual appeal
-        function createParticle() {
-            const particle = document.createElement('div');
-            particle.style.position = 'fixed';
-            particle.style.width = '4px';
-            particle.style.height = '4px';
-            particle.style.background = 'rgba(255, 255, 255, 0.5)';
-            particle.style.borderRadius = '50%';
-            particle.style.pointerEvents = 'none';
-            particle.style.left = Math.random() * window.innerWidth + 'px';
-            particle.style.top = window.innerHeight + 'px';
-            document.body.appendChild(particle);
             
-            let position = window.innerHeight;
-            const animate = () => {
-                position -= 2;
-                particle.style.top = position + 'px';
-                particle.style.opacity = position / window.innerHeight;
+            // Load classifications
+            const savedClassifications = localStorage.getItem('classifications');
+            if (savedClassifications) {
+                classifications = JSON.parse(savedClassifications);
+                updateRecentClassifications();
+            }
+            
+            // Load carbon data
+            const savedCarbonData = localStorage.getItem('carbonData');
+            if (savedCarbonData) {
+                carbonData = JSON.parse(savedCarbonData);
+                updateCarbonChart();
+                updateCarbonDisplay();
+            }
+            
+            // Load challenge progress
+            const savedChallengeProgress = localStorage.getItem('challengeProgress');
+            if (savedChallengeProgress) {
+                challengeProgress = JSON.parse(savedChallengeProgress);
                 
-                if (position > -10) {
-                    requestAnimationFrame(animate);
-                } else {
-                    particle.remove();
+                // Update UI for challenges
+                if (document.getElementById('recyclingProgress')) {
+                    document.getElementById('recyclingProgress').style.width = 
+                        `${(challengeProgress.recycling / 20) * 100}%`;
+                    document.getElementById('recyclingProgress').textContent = 
+                        `${challengeProgress.recycling}/20 items`;
                 }
-            };
-            animate();
+            }
         }
 
-        // Create particles occasionally
-        setInterval(createParticle, 3000);
+        // Initialize the app when the page loads
+        window.onload = initApp;
+    </script>
+</body>
+</html>
