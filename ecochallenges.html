@@ -190,11 +190,7 @@
             background-color: #2e6a4d;
             border-radius: 10px;
             transition: width 0.8s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #e0e1dd;
-            font-size: 0.7rem;
+            position: relative;
         }
 
         .progress-text {
@@ -202,6 +198,16 @@
             justify-content: space-between;
             font-size: 0.85rem;
             opacity: 0.8;
+        }
+
+        .progress-percentage {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: bold;
         }
 
         .challenge-actions {
@@ -536,7 +542,7 @@
                 <div class="card">
                     <h2>
                         Weekly Challenges
-                        <span class="time-remaining" id="weekly-time-remaining"></span>
+                        <span class="time-remaining" id="weekly-time-remaining">6 days 23h remaining</span>
                     </h2>
                     
                     <div class="challenge-item">
@@ -546,7 +552,9 @@
                             <p>Use only sustainable transportation for 7 days. Walking, cycling, and public transport all count!</p>
                             <div class="progress-container">
                                 <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 0%" id="transport-progress">0/7 days</div>
+                                    <div class="progress-fill" style="width: 0%" id="transport-progress">
+                                        <span class="progress-percentage">0%</span>
+                                    </div>
                                 </div>
                                 <div class="progress-text">
                                     <span>Started: <span id="transport-start">-</span></span>
@@ -567,7 +575,9 @@
                             <p>Correctly sort 20 items using our AI waste classifier. Help reduce contamination in recycling streams!</p>
                             <div class="progress-container">
                                 <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 0%" id="recycling-progress">0/20 items</div>
+                                    <div class="progress-fill" style="width: 0%" id="recycling-progress">
+                                        <span class="progress-percentage">0%</span>
+                                    </div>
                                 </div>
                                 <div class="progress-text">
                                     <span>0 items sorted</span>
@@ -588,7 +598,9 @@
                             <p>Reduce your energy usage by 20% this week. Turn off lights, unplug devices, and use energy-efficient appliances.</p>
                             <div class="progress-container">
                                 <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 0%" id="energy-progress">0% reduced</div>
+                                    <div class="progress-fill" style="width: 0%" id="energy-progress">
+                                        <span class="progress-percentage">0%</span>
+                                    </div>
                                 </div>
                                 <div class="progress-text">
                                     <span>Current reduction: 0%</span>
@@ -609,7 +621,9 @@
                             <p>Contribute to reforestation efforts by planting a tree or donating to a verified tree-planting organization.</p>
                             <div class="progress-container">
                                 <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 0%" id="tree-progress">0/1 trees</div>
+                                    <div class="progress-fill" style="width: 0%" id="tree-progress">
+                                        <span class="progress-percentage">0%</span>
+                                    </div>
                                 </div>
                                 <div class="progress-text">
                                     <span>Planted: 0 trees</span>
@@ -630,7 +644,9 @@
                             <p>Save 100 gallons of water this week by taking shorter showers, fixing leaks, and using water-efficient fixtures.</p>
                             <div class="progress-container">
                                 <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 0%" id="water-progress">0/100 gallons</div>
+                                    <div class="progress-fill" style="width: 0%" id="water-progress">
+                                        <span class="progress-percentage">0%</span>
+                                    </div>
                                 </div>
                                 <div class="progress-text">
                                     <span>Saved: 0 gallons</span>
@@ -648,17 +664,19 @@
                 <div class="card">
                     <h2>
                         Monthly Special Challenge
-                        <span class="time-remaining" id="monthly-time-remaining"></span>
+                        <span class="time-remaining" id="monthly-time-remaining">27 days remaining</span>
                     </h2>
                     <div class="special-challenge">
                         <h3>Climate Action Hero</h3>
                         <p>Complete all weekly challenges this month to earn this exclusive badge and maximize your environmental impact!</p>
                         <div class="progress-container">
                             <div class="progress-bar">
-                                <div class="progress-fill" style="width: 0%; background: #e9c46a;" id="monthly-progress">0/5 challenges</div>
+                                <div class="progress-fill" style="width: 0%; background: #e9c46a;" id="monthly-progress">
+                                    <span class="progress-percentage">0%</span>
+                                </div>
                             </div>
                             <div class="progress-text">
-                                <span>Time remaining: <span id="monthly-days-left">-</span> days</span>
+                                <span>Time remaining: <span id="monthly-days-left">27</span> days</span>
                                 <span id="monthly-challenges">0/5 challenges</span>
                             </div>
                         </div>
@@ -833,9 +851,6 @@
 
         // Initialize the page
         function initPage() {
-            // Set up automatic challenge reset
-            setupChallengeReset();
-            
             // Load user data from localStorage if available
             loadUserData();
             
@@ -859,114 +874,67 @@
             setInterval(updateTimeRemaining, 60000);
         }
 
-        // Set up automatic challenge reset based on EST timezone
-        function setupChallengeReset() {
-            // Check if we need to reset weekly challenges (every Sunday at 11:59 PM EST)
-            const now = new Date();
-            const estOffset = -5 * 60; // EST is UTC-5
-            const estNow = new Date(now.getTime() + (estOffset - now.getTimezoneOffset()) * 60000);
+        // Initialize the chart
+        function initChart() {
+            const ctx = document.getElementById('savings-chart').getContext('2d');
             
-            // Check if it's a new week (Sunday)
-            if (estNow.getDay() === 0) {
-                const lastReset = localStorage.getItem('lastWeeklyReset');
-                const resetDate = lastReset ? new Date(parseInt(lastReset)) : new Date(0);
-                
-                // If we haven't reset this week yet
-                if (resetDate.getDate() !== estNow.getDate() || 
-                    resetDate.getMonth() !== estNow.getMonth() || 
-                    resetDate.getFullYear() !== estNow.getFullYear()) {
-                    
-                    // Save current progress to history
-                    saveWeeklyProgress();
-                    
-                    // Reset weekly challenges
-                    resetWeeklyChallenges();
-                    
-                    // Update reset date
-                    localStorage.setItem('lastWeeklyReset', estNow.getTime().toString());
-                }
-            }
+            // Sample data for the chart
+            const weeklyLabels = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
+            const co2Data = [12, 18, 25, 32];
+            const treeData = [1, 2, 3, 5];
             
-            // Check if we need to reset monthly challenges (last day of month at 11:59 PM EST)
-            const lastDayOfMonth = new Date(estNow.getFullYear(), estNow.getMonth() + 1, 0);
-            if (estNow.getDate() === lastDayOfMonth.getDate()) {
-                const lastMonthlyReset = localStorage.getItem('lastMonthlyReset');
-                const resetDate = lastMonthlyReset ? new Date(parseInt(lastMonthlyReset)) : new Date(0);
-                
-                // If we haven't reset this month yet
-                if (resetDate.getMonth() !== estNow.getMonth() || 
-                    resetDate.getFullYear() !== estNow.getFullYear()) {
-                    
-                    // Save current progress to history
-                    saveMonthlyProgress();
-                    
-                    // Reset monthly challenges
-                    resetMonthlyChallenges();
-                    
-                    // Update reset date
-                    localStorage.setItem('lastMonthlyReset', estNow.getTime().toString());
-                }
-            }
-        }
-
-        // Reset weekly challenges
-        function resetWeeklyChallenges() {
-            userData.challenges.transport.current = 0;
-            userData.challenges.recycling.current = 0;
-            userData.challenges.energy.current = 0;
-            userData.challenges.water.current = 0;
-            userData.challenges.tree.current = 0;
-            
-            // Reset start dates
-            const now = new Date();
-            userData.challenges.transport.startDate = null;
-            userData.challenges.recycling.startDate = null;
-            userData.challenges.energy.startDate = null;
-            userData.challenges.water.startDate = null;
-            userData.challenges.tree.startDate = null;
-            
-            // Save the reset state
-            saveUserData();
-            updateAllProgressBars();
-        }
-
-        // Reset monthly challenges
-        function resetMonthlyChallenges() {
-            // For monthly challenge, we just need to reset the progress tracking
-            userData.history.monthly = [];
-            saveUserData();
-        }
-
-        // Save weekly progress to history
-        function saveWeeklyProgress() {
-            const weekProgress = {
-                date: new Date().toISOString(),
-                challenges: {
-                    transport: userData.challenges.transport.current,
-                    recycling: userData.challenges.recycling.current,
-                    energy: userData.challenges.energy.current,
-                    water: userData.challenges.water.current,
-                    tree: userData.challenges.tree.current
+            savingsChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: weeklyLabels,
+                    datasets: [
+                        {
+                            label: 'CO₂ Saved (kg)',
+                            data: co2Data,
+                            backgroundColor: '#2e6a4d',
+                            borderColor: '#2e6a4d',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Trees Planted',
+                            data: treeData,
+                            backgroundColor: '#415a77',
+                            borderColor: '#415a77',
+                            borderWidth: 1
+                        }
+                    ]
                 },
-                points: userData.points,
-                impact: { ...userData.impact }
-            };
-            
-            userData.history.weekly.push(weekProgress);
-            saveUserData();
-        }
-
-        // Save monthly progress to history
-        function saveMonthlyProgress() {
-            const monthProgress = {
-                date: new Date().toISOString(),
-                challengesCompleted: Object.values(userData.challenges).filter(c => c.current >= c.target).length,
-                points: userData.points,
-                impact: { ...userData.impact }
-            };
-            
-            userData.history.monthly.push(monthProgress);
-            saveUserData();
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#e0e1dd'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#e0e1dd'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#e0e1dd'
+                            }
+                        }
+                    }
+                }
+            });
         }
 
         // Update progress for a specific challenge
@@ -1012,4 +980,59 @@
             // Update the UI
             updateProgressBars();
             updateImpactStats();
-            document.getElementById('total-points').textContent = user
+            document.getElementById('total-points').textContent = userData.points;
+            
+            // Update user level based on points
+            updateUserLevel();
+            
+            // Save user data
+            saveUserData();
+        }
+
+        // Update impact stats based on challenge progress
+        function updateImpactFromChallenge(challenge, value) {
+            switch(challenge) {
+                case 'transport':
+                    userData.impact.co2 += 2.5; // Approx CO2 saved per car-free day
+                    break;
+                case 'recycling':
+                    userData.impact.co2 += 0.5; // Approx CO2 saved per recycled item
+                    break;
+                case 'energy':
+                    userData.impact.co2 += value * 0.3; // Approx CO2 saved per % reduction
+                    break;
+                case 'water':
+                    userData.impact.co2 += value * 0.05; // Approx CO2 saved per gallon conserved
+                    break;
+                case 'tree':
+                    userData.impact.trees += value;
+                    userData.impact.co2 += value * 21.77; // Average tree absorbs 21.77kg CO2 per year
+                    break;
+            }
+        }
+
+        // Update user level based on points
+        function updateUserLevel() {
+            let level = 1;
+            let levelName = "Eco Beginner";
+            
+            if (userData.points >= 1000) {
+                level = 5;
+                levelName = "Eco Champion";
+            } else if (userData.points >= 500) {
+                level = 4;
+                levelName = "Eco Advocate";
+            } else if (userData.points >= 250) {
+                level = 3;
+                levelName = "Eco Enthusiast";
+            } else if (userData.points >= 100) {
+                level = 2;
+                levelName = "Eco Explorer";
+            }
+            
+            userData.level = level;
+            document.querySelector('.user-level').textContent = `${levelName} Level ${level}`;
+        }
+
+        // Check for achievements
+        function checkForAchievements
