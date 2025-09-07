@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eco Challenges - EcoVision AI</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -119,6 +122,15 @@
             color: #e0e1dd;
             border-bottom: 2px solid #2e6a4d;
             padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .time-remaining {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            font-weight: normal;
         }
 
         .challenge-item {
@@ -343,6 +355,32 @@
             opacity: 0.9;
         }
 
+        .chart-container {
+            margin-top: 30px;
+            height: 300px;
+            position: relative;
+        }
+
+        .export-btn {
+            background-color: #415a77;
+            color: #e0e1dd;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .export-btn:hover {
+            background-color: #4c6b94;
+            transform: translateY(-2px);
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -496,7 +534,10 @@
         <div class="dashboard-grid">
             <div class="main-content">
                 <div class="card">
-                    <h2>Weekly Challenges</h2>
+                    <h2>
+                        Weekly Challenges
+                        <span class="time-remaining" id="weekly-time-remaining"></span>
+                    </h2>
                     
                     <div class="challenge-item">
                         <div class="challenge-content">
@@ -505,11 +546,11 @@
                             <p>Use only sustainable transportation for 7 days. Walking, cycling, and public transport all count!</p>
                             <div class="progress-container">
                                 <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 43%" id="transport-progress">3/7 days</div>
+                                    <div class="progress-fill" style="width: 0%" id="transport-progress">0/7 days</div>
                                 </div>
                                 <div class="progress-text">
-                                    <span>Started: 3 days ago</span>
-                                    <span id="transport-days">3/7 days</span>
+                                    <span>Started: <span id="transport-start">-</span></span>
+                                    <span id="transport-days">0/7 days</span>
                                 </div>
                             </div>
                         </div>
@@ -526,11 +567,11 @@
                             <p>Correctly sort 20 items using our AI waste classifier. Help reduce contamination in recycling streams!</p>
                             <div class="progress-container">
                                 <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 60%" id="recycling-progress">12/20 items</div>
+                                    <div class="progress-fill" style="width: 0%" id="recycling-progress">0/20 items</div>
                                 </div>
                                 <div class="progress-text">
-                                    <span>12 items sorted</span>
-                                    <span id="recycling-items">12/20 items</span>
+                                    <span>0 items sorted</span>
+                                    <span id="recycling-items">0/20 items</span>
                                 </div>
                             </div>
                         </div>
@@ -547,11 +588,11 @@
                             <p>Reduce your energy usage by 20% this week. Turn off lights, unplug devices, and use energy-efficient appliances.</p>
                             <div class="progress-container">
                                 <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 75%" id="energy-progress">15% reduced</div>
+                                    <div class="progress-fill" style="width: 0%" id="energy-progress">0% reduced</div>
                                 </div>
                                 <div class="progress-text">
-                                    <span>Current reduction: 15%</span>
-                                    <span id="energy-percent">15%/20%</span>
+                                    <span>Current reduction: 0%</span>
+                                    <span id="energy-percent">0%/20%</span>
                                 </div>
                             </div>
                         </div>
@@ -568,17 +609,17 @@
                             <p>Contribute to reforestation efforts by planting a tree or donating to a verified tree-planting organization.</p>
                             <div class="progress-container">
                                 <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 100%" id="tree-progress">Completed!</div>
+                                    <div class="progress-fill" style="width: 0%" id="tree-progress">0/1 trees</div>
                                 </div>
                                 <div class="progress-text">
-                                    <span>Planted: 2 trees</span>
+                                    <span>Planted: 0 trees</span>
                                     <span>Goal: 1 tree</span>
                                 </div>
                             </div>
                         </div>
                         <div class="challenge-actions">
                             <span class="points-badge">+100 pts</span>
-                            <button class="join-btn" disabled>Completed</button>
+                            <button class="join-btn" onclick="updateProgress('tree', 1)">Log Tree</button>
                         </div>
                     </div>
 
@@ -589,11 +630,11 @@
                             <p>Save 100 gallons of water this week by taking shorter showers, fixing leaks, and using water-efficient fixtures.</p>
                             <div class="progress-container">
                                 <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 20%" id="water-progress">20/100 gallons</div>
+                                    <div class="progress-fill" style="width: 0%" id="water-progress">0/100 gallons</div>
                                 </div>
                                 <div class="progress-text">
-                                    <span>Saved: 20 gallons</span>
-                                    <span id="water-gallons">20/100 gallons</span>
+                                    <span>Saved: 0 gallons</span>
+                                    <span id="water-gallons">0/100 gallons</span>
                                 </div>
                             </div>
                         </div>
@@ -605,38 +646,51 @@
                 </div>
 
                 <div class="card">
-                    <h2>Monthly Special Challenge</h2>
+                    <h2>
+                        Monthly Special Challenge
+                        <span class="time-remaining" id="monthly-time-remaining"></span>
+                    </h2>
                     <div class="special-challenge">
                         <h3>Climate Action Hero</h3>
                         <p>Complete all weekly challenges this month to earn this exclusive badge and maximize your environmental impact!</p>
                         <div class="progress-container">
                             <div class="progress-bar">
-                                <div class="progress-fill" style="width: 65%; background: #e9c46a;" id="monthly-progress">13/20 challenges</div>
+                                <div class="progress-fill" style="width: 0%; background: #e9c46a;" id="monthly-progress">0/5 challenges</div>
                             </div>
                             <div class="progress-text">
-                                <span>Time remaining: 12 days</span>
-                                <span id="monthly-challenges">13/20 challenges</span>
+                                <span>Time remaining: <span id="monthly-days-left">-</span> days</span>
+                                <span id="monthly-challenges">0/5 challenges</span>
                             </div>
                         </div>
                         <button class="join-btn" style="margin-top: 15px;" onclick="showMonthlyChallenge()">View Details</button>
                     </div>
+                </div>
+
+                <div class="card">
+                    <h2>Your Environmental Impact</h2>
+                    <div class="chart-container">
+                        <canvas id="savings-chart"></canvas>
+                    </div>
+                    <button class="export-btn" onclick="exportProgressPDF()">
+                        Export Progress Report
+                    </button>
                 </div>
             </div>
 
             <div class="sidebar">
                 <div class="card user-stats">
                     <h2>Your Eco Profile</h2>
-                    <div class="user-score" id="total-points">1,250</div>
+                    <div class="user-score" id="total-points">0</div>
                     <div>Total Points</div>
-                    <div class="user-level">Eco Champion Level 5</div>
+                    <div class="user-level">Eco Beginner Level 1</div>
                     
                     <div class="impact-stats">
                         <div class="impact-stat">
-                            <div class="impact-value" id="co2-saved">89.3</div>
+                            <div class="impact-value" id="co2-saved">0</div>
                             <div class="impact-label">kg CO₂ Saved</div>
                         </div>
                         <div class="impact-stat">
-                            <div class="impact-value" id="trees-planted">12</div>
+                            <div class="impact-value" id="trees-planted">0</div>
                             <div class="impact-label">Trees Planted</div>
                         </div>
                     </div>
@@ -645,22 +699,22 @@
                 <div class="card">
                     <h2>Your Achievements</h2>
                     <div class="achievements-grid">
-                        <div class="achievement unlocked" onclick="showAchievement('First Recycler')">
+                        <div class="achievement locked" onclick="showAchievement('First Recycler')">
                             <div class="achievement-icon">♻️</div>
                             <h4>First Recycler</h4>
                             <p>Recycled your first item</p>
                         </div>
-                        <div class="achievement unlocked" onclick="showAchievement('Week Warrior')">
+                        <div class="achievement locked" onclick="showAchievement('Week Warrior')">
                             <div class="achievement-icon">⭐</div>
                             <h4>Week Warrior</h4>
                             <p>Completed a weekly challenge</p>
                         </div>
-                        <div class="achievement unlocked" onclick="showAchievement('Earth Protector')">
+                        <div class="achievement locked" onclick="showAchievement('Earth Protector')">
                             <div class="achievement-icon">🌍</div>
                             <h4>Earth Protector</h4>
                             <p>Saved 50kg of CO₂</p>
                         </div>
-                        <div class="achievement unlocked" onclick="showAchievement('Waste Reducer')">
+                        <div class="achievement locked" onclick="showAchievement('Waste Reducer')">
                             <div class="achievement-icon">🗑️</div>
                             <h4>Waste Reducer</h4>
                             <p>Recycled 100 items</p>
@@ -691,12 +745,12 @@
             <div class="modal-body">
                 <p>How much energy did you save today?</p>
                 <div style="margin: 20px 0;">
-                    <input type="range" min="0" max="20" value="5" class="slider" id="energy-slider" style="width: 100%;">
+                    <input type="range" min="1" max="20" value="5" class="slider" id="energy-slider" style="width: 100%;">
                     <div style="text-align: center; margin-top: 10px;">
                         <span id="energy-value">5</span>% reduction
                     </div>
                 </div>
-                <p>Your current energy reduction progress: <span id="current-energy">15</span>%</p>
+                <p>Your current energy reduction progress: <span id="current-energy">0</span>%</p>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" onclick="closeModal('energy-modal')">Cancel</button>
@@ -716,7 +770,7 @@
                 <div style="margin: 20px 0;">
                     <input type="number" id="water-input" min="1" max="50" value="5" style="width: 100%; padding: 10px; border-radius: 8px; background: #415a77; border: none; color: #e0e1dd;">
                 </div>
-                <p>Your current water savings: <span id="current-water">20</span> gallons</p>
+                <p>Your current water savings: <span id="current-water">0</span> gallons</p>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" onclick="closeModal('water-modal')">Cancel</button>
@@ -735,7 +789,7 @@
                 <div style="text-align: center; font-size: 3rem; margin: 20px 0;" id="achievement-icon">♻️</div>
                 <p id="achievement-description">Description of the achievement</p>
                 <div id="achievement-status" style="margin-top: 20px; padding: 10px; background: #415a77; border-radius: 8px; text-align: center;">
-                    Status: Unlocked on May 15, 2023
+                    Status: Locked
                 </div>
             </div>
             <div class="modal-footer">
@@ -745,43 +799,184 @@
     </div>
 
     <script>
-        // User data model
+        // User data model - starting fresh
         let userData = {
-            points: 1250,
+            points: 0,
+            level: 1,
             challenges: {
-                transport: { current: 3, target: 7, points: 50 },
-                recycling: { current: 12, target: 20, points: 30 },
-                energy: { current: 15, target: 20, points: 40 },
-                tree: { current: 2, target: 1, points: 100, completed: true },
-                water: { current: 20, target: 100, points: 60 }
+                transport: { current: 0, target: 7, points: 50, startDate: null },
+                recycling: { current: 0, target: 20, points: 30, startDate: null },
+                energy: { current: 0, target: 20, points: 40, startDate: null },
+                tree: { current: 0, target: 1, points: 100, startDate: null },
+                water: { current: 0, target: 100, points: 60, startDate: null }
             },
             impact: {
-                co2: 89.3,
-                trees: 12
+                co2: 0,
+                trees: 0
             },
             achievements: {
-                'First Recycler': { unlocked: true, date: '2023-05-15' },
-                'Week Warrior': { unlocked: true, date: '2023-06-02' },
-                'Earth Protector': { unlocked: true, date: '2023-07-10' },
-                'Waste Reducer': { unlocked: true, date: '2023-08-22' },
+                'First Recycler': { unlocked: false },
+                'Week Warrior': { unlocked: false },
+                'Earth Protector': { unlocked: false },
+                'Waste Reducer': { unlocked: false },
                 'Carbon Cutter': { unlocked: false },
                 'Tree Hugger': { unlocked: false }
+            },
+            history: {
+                weekly: [],
+                monthly: []
             }
         };
 
+        // Chart instance
+        let savingsChart;
+
         // Initialize the page
         function initPage() {
+            // Set up automatic challenge reset
+            setupChallengeReset();
+            
+            // Load user data from localStorage if available
+            loadUserData();
+            
+            // Initialize the chart
+            initChart();
+            
+            // Update all UI elements
             updateAllProgressBars();
             updateImpactStats();
+            updateTimeRemaining();
             
             // Set up event listeners
             document.getElementById('energy-slider').addEventListener('input', function() {
                 document.getElementById('energy-value').textContent = this.value;
             });
+            
+            // Set up automatic save every minute
+            setInterval(saveUserData, 60000);
+            
+            // Update time remaining every minute
+            setInterval(updateTimeRemaining, 60000);
+        }
+
+        // Set up automatic challenge reset based on EST timezone
+        function setupChallengeReset() {
+            // Check if we need to reset weekly challenges (every Sunday at 11:59 PM EST)
+            const now = new Date();
+            const estOffset = -5 * 60; // EST is UTC-5
+            const estNow = new Date(now.getTime() + (estOffset - now.getTimezoneOffset()) * 60000);
+            
+            // Check if it's a new week (Sunday)
+            if (estNow.getDay() === 0) {
+                const lastReset = localStorage.getItem('lastWeeklyReset');
+                const resetDate = lastReset ? new Date(parseInt(lastReset)) : new Date(0);
+                
+                // If we haven't reset this week yet
+                if (resetDate.getDate() !== estNow.getDate() || 
+                    resetDate.getMonth() !== estNow.getMonth() || 
+                    resetDate.getFullYear() !== estNow.getFullYear()) {
+                    
+                    // Save current progress to history
+                    saveWeeklyProgress();
+                    
+                    // Reset weekly challenges
+                    resetWeeklyChallenges();
+                    
+                    // Update reset date
+                    localStorage.setItem('lastWeeklyReset', estNow.getTime().toString());
+                }
+            }
+            
+            // Check if we need to reset monthly challenges (last day of month at 11:59 PM EST)
+            const lastDayOfMonth = new Date(estNow.getFullYear(), estNow.getMonth() + 1, 0);
+            if (estNow.getDate() === lastDayOfMonth.getDate()) {
+                const lastMonthlyReset = localStorage.getItem('lastMonthlyReset');
+                const resetDate = lastMonthlyReset ? new Date(parseInt(lastMonthlyReset)) : new Date(0);
+                
+                // If we haven't reset this month yet
+                if (resetDate.getMonth() !== estNow.getMonth() || 
+                    resetDate.getFullYear() !== estNow.getFullYear()) {
+                    
+                    // Save current progress to history
+                    saveMonthlyProgress();
+                    
+                    // Reset monthly challenges
+                    resetMonthlyChallenges();
+                    
+                    // Update reset date
+                    localStorage.setItem('lastMonthlyReset', estNow.getTime().toString());
+                }
+            }
+        }
+
+        // Reset weekly challenges
+        function resetWeeklyChallenges() {
+            userData.challenges.transport.current = 0;
+            userData.challenges.recycling.current = 0;
+            userData.challenges.energy.current = 0;
+            userData.challenges.water.current = 0;
+            userData.challenges.tree.current = 0;
+            
+            // Reset start dates
+            const now = new Date();
+            userData.challenges.transport.startDate = null;
+            userData.challenges.recycling.startDate = null;
+            userData.challenges.energy.startDate = null;
+            userData.challenges.water.startDate = null;
+            userData.challenges.tree.startDate = null;
+            
+            // Save the reset state
+            saveUserData();
+            updateAllProgressBars();
+        }
+
+        // Reset monthly challenges
+        function resetMonthlyChallenges() {
+            // For monthly challenge, we just need to reset the progress tracking
+            userData.history.monthly = [];
+            saveUserData();
+        }
+
+        // Save weekly progress to history
+        function saveWeeklyProgress() {
+            const weekProgress = {
+                date: new Date().toISOString(),
+                challenges: {
+                    transport: userData.challenges.transport.current,
+                    recycling: userData.challenges.recycling.current,
+                    energy: userData.challenges.energy.current,
+                    water: userData.challenges.water.current,
+                    tree: userData.challenges.tree.current
+                },
+                points: userData.points,
+                impact: { ...userData.impact }
+            };
+            
+            userData.history.weekly.push(weekProgress);
+            saveUserData();
+        }
+
+        // Save monthly progress to history
+        function saveMonthlyProgress() {
+            const monthProgress = {
+                date: new Date().toISOString(),
+                challengesCompleted: Object.values(userData.challenges).filter(c => c.current >= c.target).length,
+                points: userData.points,
+                impact: { ...userData.impact }
+            };
+            
+            userData.history.monthly.push(monthProgress);
+            saveUserData();
         }
 
         // Update progress for a specific challenge
         function updateProgress(challenge, value) {
+            // Set start date if this is the first time attempting this challenge
+            if (userData.challenges[challenge].current === 0 && !userData.challenges[challenge].startDate) {
+                userData.challenges[challenge].startDate = new Date().toISOString();
+                updateStartDateDisplay(challenge);
+            }
+            
             if (challenge === 'energy') {
                 // For energy, we set the value directly
                 userData.challenges[challenge].current = Math.min(
@@ -794,16 +989,20 @@
                 userData.challenges[challenge].current += value;
                 closeModal('water-modal');
             } else {
-                // For others, increment by 1
-                userData.challenges[challenge].current++;
+                // For others, increment by the value
+                userData.challenges[challenge].current += value;
             }
             
             // Check if challenge is completed
             if (userData.challenges[challenge].current >= userData.challenges[challenge].target) {
                 if (!userData.challenges[challenge].completed) {
                     userData.points += userData.challenges[challenge].points;
-                    alert(`Challenge completed! You earned ${userData.challenges[challenge].points} points!`);
                     userData.challenges[challenge].completed = true;
+                    
+                    // Check for achievements
+                    checkForAchievements();
+                    
+                    alert(`Challenge completed! You earned ${userData.challenges[challenge].points} points!`);
                 }
             }
             
@@ -813,137 +1012,4 @@
             // Update the UI
             updateProgressBars();
             updateImpactStats();
-            document.getElementById('total-points').textContent = userData.points.toLocaleString();
-        }
-
-        // Update impact stats based on challenge progress
-        function updateImpactFromChallenge(challenge, value) {
-            switch(challenge) {
-                case 'transport':
-                    userData.impact.co2 += 2.5; // Approx CO2 saved per car-free day
-                    break;
-                case 'recycling':
-                    userData.impact.co2 += 0.5; // Approx CO2 saved per recycled item
-                    break;
-                case 'energy':
-                    userData.impact.co2 += value * 0.3; // Approx CO2 saved per % reduction
-                    break;
-                case 'water':
-                    userData.impact.co2 += value * 0.05; // Approx CO2 saved per gallon conserved
-                    break;
-            }
-        }
-
-        // Update all progress bars
-        function updateAllProgressBars() {
-            updateProgressBars();
-            document.getElementById('total-points').textContent = userData.points.toLocaleString();
-        }
-
-        // Update progress bars based on userData
-        function updateProgressBars() {
-            // Transport challenge
-            const transportProgress = (userData.challenges.transport.current / userData.challenges.transport.target) * 100;
-            document.getElementById('transport-progress').style.width = `${transportProgress}%`;
-            document.getElementById('transport-progress').textContent = `${userData.challenges.transport.current}/${userData.challenges.transport.target} days`;
-            document.getElementById('transport-days').textContent = `${userData.challenges.transport.current}/${userData.challenges.transport.target} days`;
-            
-            // Recycling challenge
-            const recyclingProgress = (userData.challenges.recycling.current / userData.challenges.recycling.target) * 100;
-            document.getElementById('recycling-progress').style.width = `${recyclingProgress}%`;
-            document.getElementById('recycling-progress').textContent = `${userData.challenges.recycling.current}/${userData.challenges.recycling.target} items`;
-            document.getElementById('recycling-items').textContent = `${userData.challenges.recycling.current}/${userData.challenges.recycling.target} items`;
-            
-            // Energy challenge
-            const energyProgress = (userData.challenges.energy.current / userData.challenges.energy.target) * 100;
-            document.getElementById('energy-progress').style.width = `${energyProgress}%`;
-            document.getElementById('energy-progress').textContent = `${userData.challenges.energy.current}% reduced`;
-            document.getElementById('energy-percent').textContent = `${userData.challenges.energy.current}%/${userData.challenges.energy.target}%`;
-            document.getElementById('current-energy').textContent = userData.challenges.energy.current;
-            
-            // Water challenge
-            const waterProgress = (userData.challenges.water.current / userData.challenges.water.target) * 100;
-            document.getElementById('water-progress').style.width = `${waterProgress}%`;
-            document.getElementById('water-progress').textContent = `${userData.challenges.water.current}/${userData.challenges.water.target} gallons`;
-            document.getElementById('water-gallons').textContent = `${userData.challenges.water.current}/${userData.challenges.water.target} gallons`;
-            document.getElementById('current-water').textContent = userData.challenges.water.current;
-            
-            // Monthly challenge (average of all challenges)
-            const totalChallenges = Object.keys(userData.challenges).length;
-            const completedChallenges = Object.values(userData.challenges).filter(c => c.completed).length;
-            const monthlyProgress = (completedChallenges / totalChallenges) * 100;
-            document.getElementById('monthly-progress').style.width = `${monthlyProgress}%`;
-            document.getElementById('monthly-progress').textContent = `${completedChallenges}/${totalChallenges} challenges`;
-            document.getElementById('monthly-challenges').textContent = `${completedChallenges}/${totalChallenges} challenges`;
-        }
-
-        // Update impact statistics
-        function updateImpactStats() {
-            document.getElementById('co2-saved').textContent = userData.impact.co2.toFixed(1);
-            document.getElementById('trees-planted').textContent = userData.impact.trees;
-        }
-
-        // Show modals
-        function showEnergyModal() {
-            document.getElementById('energy-modal').style.display = 'flex';
-        }
-
-        function showWaterModal() {
-            document.getElementById('water-modal').style.display = 'flex';
-        }
-
-        function showMonthlyChallenge() {
-            alert("Complete all weekly challenges to become a Climate Action Hero! You've completed " + 
-                Object.values(userData.challenges).filter(c => c.completed).length + 
-                " out of " + Object.keys(userData.challenges).length + " challenges.");
-        }
-
-        function showAchievement(achievement) {
-            const achievementData = userData.achievements[achievement];
-            const modal = document.getElementById('achievement-modal');
-            
-            document.getElementById('achievement-title').textContent = achievement;
-            
-            // Set icon based on achievement name
-            const iconMap = {
-                'First Recycler': '♻️',
-                'Week Warrior': '⭐',
-                'Earth Protector': '🌍',
-                'Waste Reducer': '🗑️',
-                'Carbon Cutter': '📉',
-                'Tree Hugger': '🌳'
-            };
-            document.getElementById('achievement-icon').textContent = iconMap[achievement] || '🏆';
-            
-            // Set description based on achievement name
-            const descriptionMap = {
-                'First Recycler': 'You recycled your first item using our AI waste classifier! Every small action counts towards a greener planet.',
-                'Week Warrior': 'You completed your first weekly challenge! Consistency is key to making a lasting environmental impact.',
-                'Earth Protector': 'You saved 50kg of CO₂ through your sustainable actions! That\'s equivalent to not driving 125 miles.',
-                'Waste Reducer': 'You recycled 100 items correctly! Proper recycling reduces contamination and makes the process more efficient.',
-                'Carbon Cutter': 'Reduce your carbon footprint by 25% compared to your baseline measurement.',
-                'Tree Hugger': 'Plant 10 trees either physically or through verified tree-planting initiatives.'
-            };
-            document.getElementById('achievement-description').textContent = descriptionMap[achievement] || 'Achievement description';
-            
-            // Set status text
-            if (achievementData.unlocked) {
-                const date = new Date(achievementData.date);
-                document.getElementById('achievement-status').textContent = `Unlocked on ${date.toLocaleDateString()}`;
-            } else {
-                document.getElementById('achievement-status').textContent = 'Locked - Keep progressing to unlock this achievement';
-            }
-            
-            modal.style.display = 'flex';
-        }
-
-        // Close modal
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        }
-
-        // Initialize the page when it loads
-        window.onload = initPage;
-    </script>
-</body>
-</html>
+            document.getElementById('total-points').textContent = user
