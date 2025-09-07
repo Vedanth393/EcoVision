@@ -255,7 +255,7 @@
         <div class="header">
             <h1>Carbon Footprint Tracker</h1>
             <p>Monitor and reduce your daily carbon emissions</p>
-            <div class="date-display" id="currentDate">Sunday, September 7, 2025</div>
+            <div class="date-display" id="currentDate">Loading date...</div>
         </div>
 
         <div class="nav-tabs">
@@ -351,7 +351,7 @@
             <h2>CO₂ Emissions Trend</h2>
             <div class="history-controls">
                 <button class="history-btn" onclick="changeWeek(-1)">Previous Week</button>
-                <span id="weekDisplay">Week starting Sep 7, 2025</span>
+                <span id="weekDisplay">Loading...</span>
                 <button class="history-btn" onclick="changeWeek(1)">Next Week</button>
             </div>
             <div class="chart-container">
@@ -402,7 +402,7 @@
 
         // Set current date display
         function setCurrentDate() {
-            const today = new Date(2025, 8, 7); // September 7, 2025 (0-indexed month)
+            const today = new Date(); // Use current date
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             document.getElementById('currentDate').textContent = today.toLocaleDateString('en-US', options);
         }
@@ -481,8 +481,8 @@
 
         // Get day names for the week
         function getWeekDays(weekOffset) {
-            const baseDate = new Date(2025, 8, 7); // September 7, 2025 (Sunday)
-            const startDate = new Date(baseDate);
+            const today = new Date(); // Use current date
+            const startDate = new Date(today);
             startDate.setDate(startDate.getDate() + (weekOffset * 7));
             
             // Find Sunday of this week
@@ -502,8 +502,8 @@
 
         // Get data for the week
         function getWeekData(weekOffset) {
-            const baseDate = new Date(2025, 8, 7); // September 7, 2025
-            const startDate = new Date(baseDate);
+            const today = new Date(); // Use current date
+            const startDate = new Date(today);
             startDate.setDate(startDate.getDate() + (weekOffset * 7));
             
             // Find Sunday of this week
@@ -529,8 +529,8 @@
 
         // Update week display text
         function updateWeekDisplay() {
-            const baseDate = new Date(2025, 8, 7); // September 7, 2025
-            const startDate = new Date(baseDate);
+            const today = new Date(); // Use current date
+            const startDate = new Date(today);
             startDate.setDate(startDate.getDate() + (currentWeekOffset * 7));
             
             // Find Sunday of this week
@@ -594,7 +594,7 @@
             document.getElementById('userDaily').textContent = dailyCO2.toFixed(1) + " kg";
             
             // Store the data with today's date
-            const today = new Date(2025, 8, 7); // September 7, 2025
+            const today = new Date(); // Use current date
             const dateString = today.toISOString().split('T')[0];
             
             if (!carbonData.entries) carbonData.entries = {};
