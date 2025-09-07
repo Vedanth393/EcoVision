@@ -90,7 +90,7 @@
             margin-bottom: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             animation: fadeIn 0.5s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 极速4);
         }
 
         @keyframes fadeIn {
@@ -155,7 +155,7 @@
         }
 
         .stat-card {
-            background: linear-gradient(135deg, rgba(65, 90, 119, 0.7), rgba(46, 106, 77, 0.7));
+            background: linear-gradient(135deg, rgba(65, 90, 119, 极速7), rgba(46, 106, 77, 0.7));
             color: #e0e1dd;
             padding: 25px;
             border-radius: 15px;
@@ -175,7 +175,7 @@
             margin: 10px 0;
             animation: countUp 1s ease;
             font-weight: bold;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            text-shadow: 0 2px 10px rgba极速, 0, 0, 0.3);
         }
 
         @keyframes countUp {
@@ -222,7 +222,7 @@
             align-items: center;
             justify-content: center;
             font-size: 1.5em;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 5px 极速5px rgba(0, 0, 0, 0.2);
         }
 
         .user-stats {
@@ -236,11 +236,11 @@
         }
 
         .community-event {
-            background: linear-gradient(135deg, rgba(46, 106, 77, 0.2), rgba(65, 90, 119, 0.2));
+            background: linear-gradient(135极速, rgba(46, 106, 77, 0.2), rgba(65, 90, 119, 0.2));
             padding: 20px;
             border-radius: 15px;
             margin: 10px 0;
-            border: 1px solid #2e6a4d;
+            border: 1px solid #2e6a4极速;
             backdrop-filter: blur(5px);
             transition: all 0.3s ease;
         }
@@ -261,7 +261,7 @@
             background: linear-gradient(135deg, #2e6a4d, #3a7d5c);
             color: #e0e1dd;
             border: none;
-            padding: 10px 20px;
+            padding: 10极速 20px;
             border-radius: 50px;
             cursor: pointer;
             margin-top: 10px;
@@ -319,7 +319,7 @@
 </head>
 <body>
     <div class="app-container">
-        <div class="header">
+        <div class极速="header">
             <h1>Community Hub</h1>
             <p>Connect with eco-warriors around the world</p>
         </div>
@@ -338,10 +338,10 @@
             <div class="leaderboard-item user">
                 <span class="rank">1</span>
                 <div class="user-profile">
-                    <div class="avatar"></div>
+                    <div class="avatar">😊</div>
                     <div class="user-stats">
                         <strong>You</strong>
-                        <p>0 points • <span id="userCO2Saved">0</span> kg CO₂ saved</p>
+                        <p><span id="userPoints">0</span> points • <span id="userCO2Saved">0</span> kg CO₂ saved</p>
                         <div class="progress-bar">
                             <div class="progress-fill" id="userProgress"></div>
                         </div>
@@ -375,7 +375,7 @@
                 </div>
                 <div class="stat-card">
                     <h3>Challenges Completed</h3>
-                    <div class="stat-number" id="challengesCompleted">0</div>
+                    <div class="stat-number"极速="challengesCompleted">0</div>
                     <p>by the community</p>
                 </div>
             </div>
@@ -419,7 +419,7 @@
                 to power a TV for 3 hours. Start collecting cans today!
             </div>
             
-            <div class="eco-tip">
+            <div class="eco极速-tip">
                 <strong>Quick Win:</strong> Turn off lights when leaving a room. 
                 This can save up to 10% on your electricity bill and reduce CO₂ emissions.
             </div>
@@ -427,44 +427,86 @@
     </div>
 
     <script>
-        // Get carbon data from localStorage
-        function getCarbonData() {
+        // Get data from both Carbon Tracker and Eco Challenges
+        function getCombinedData() {
+            let totalCO2Saved = 0;
+            let totalPoints = 0;
+            let itemsRecycled = 0;
+            let challengesCompleted = 0;
+            
+            // Get data from Carbon Tracker
             const carbonData = localStorage.getItem('carbonFootprintData');
             if (carbonData) {
-                return JSON.parse(carbonData);
-            }
-            return null;
-        }
-
-        // Calculate CO2 savings based on carbon tracker data
-        function calculateCO2Savings() {
-            const carbonData = getCarbonData();
-            let totalSavings = 0;
-            
-            if (carbonData && carbonData.entries) {
-                const entries = Object.values(carbonData.entries);
-                
-                entries.forEach(entry => {
-                    // Compare to average of 14kg per day
-                    const dailySavings = Math.max(0, 14 - entry.total);
-                    totalSavings += dailySavings;
-                });
+                try {
+                    const carbon = JSON.parse(carbonData);
+                    if (carbon.entries) {
+                        Object.values(carbon.entries).forEach(entry => {
+                            // Calculate savings compared to average (14kg/day)
+                            const dailySavings = Math.max(0, 14 - entry.total);
+                            totalCO2Saved += dailySavings;
+                        });
+                    }
+                } catch (e) {
+                    console.error('Error parsing carbon data:', e);
+                }
             }
             
-            return totalSavings;
+            // Get data from Eco Challenges
+            const ecoData = localStorage.getItem('ecoUserData_v1');
+            if (ecoData) {
+                try {
+                    const eco = JSON.parse(ecoData);
+                    
+                    // Add CO2 savings from challenges
+                    if (eco.impact && eco.impact.co2) {
+                        totalCO2Saved += eco.impact.co2;
+                    }
+                    
+                    // Get points
+                    if (eco.points) {
+                        totalPoints = eco.points;
+                    }
+                    
+                    // Get recycled items count
+                    if (eco.challenges && eco.challenges.recycling && eco.challenges.recycling.current) {
+                        itemsRecycled = eco.challenges.recycling.current;
+                    }
+                    
+                    // Count completed challenges
+                    if (eco.challenges) {
+                        challengesCompleted = Object.values(eco.challenges).filter(
+                            challenge => challenge.completed
+                        ).length;
+                    }
+                } catch (e) {
+                    console.error('Error parsing eco challenges data:', e);
+                }
+            }
+            
+            return {
+                totalCO2Saved,
+                totalPoints,
+                itemsRecycled,
+                challengesCompleted
+            };
         }
 
-        // Update leaderboard with user's data
+        // Update leaderboard with combined data
         function updateLeaderboard() {
-            const co2Saved = calculateCO2Savings();
-            document.getElementById('userCO2Saved').textContent = co2Saved.toFixed(1);
+            const data = getCombinedData();
             
-            // Update progress bar (scale: 0-50kg for visual representation)
-            const progressPercent = Math.min(100, (co2Saved / 50) * 100);
+            // Update user stats
+            document.getElementById('userCO2Saved').textContent = data.totalCO2Saved.toFixed(1);
+            document.getElementById('userPoints').textContent = data.totalPoints;
+            
+            // Update progress bar (scale: 0-100kg for visual representation)
+            const progressPercent = Math.min(100, (data.totalCO2Saved / 100) * 100);
             document.getElementById('userProgress').style.width = `${progressPercent}%`;
             
             // Update community stats
-            document.getElementById('totalCO2Saved').textContent = co2Saved.toFixed(1);
+            document.getElementById('totalCO2Saved').textContent = data.totalCO2Saved.toFixed(1);
+            document.getElementById('itemsRecycled').textContent = data.itemsRecycled;
+            document.getElementById('challengesCompleted').textContent = data.challengesCompleted;
         }
 
         // Set up event dates for the next 3 weeks
@@ -476,7 +518,7 @@
             
             // Set events for the next three Saturdays
             event1Date.setDate(today.getDate() + (6 - today.getDay() + 7) % 7);
-            event2Date.setDate(event1Date.getDate() + 7);
+            event2极速Date.setDate(event1Date.getDate() + 7);
             event3Date.setDate(event2Date.getDate() + 7);
             
             // Format dates
@@ -511,6 +553,9 @@
             
             // Set up event dates
             setupEventDates();
+            
+            // Refresh data every minute
+            setInterval(updateLeaderboard, 60000);
         };
     </script>
 </body>
