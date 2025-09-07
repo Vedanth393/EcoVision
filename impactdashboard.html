@@ -236,4 +236,139 @@
             
             <div class="recommendation-card">
                 <h4>🚗 Transportation Optimization</h4>
-                <p>Based on your patterns, switching to public transport 2 days/week could save 45kg CO
+                <p>Based on your patterns, switching to public transport 2 days/week could save 45kg CO <p>Based on your patterns, switching to public transport 2 days/week could save 45kg CO₂/month</p>
+            </div>
+            
+            <div class="recommendation-card">
+                <h4>⚡ Energy Efficiency</h4>
+                <p>Your peak usage is 8-10pm. Shifting high-energy tasks earlier could reduce costs by 15%</p>
+            </div>
+            
+            <div class="recommendation-card">
+                <h4>🗑️ Waste Reduction</h4>
+                <p>You're recycling 65% correctly. Focus on plastics #3-7 for improvement</p>
+            </div>
+            
+            <div class="recommendation-card">
+                <h4>💧 Water Conservation</h4>
+                <p>Installing low-flow fixtures could save an additional 3,000 liters per year</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Recent Milestones</h2>
+            
+            <div class="milestone">
+                <span class="milestone-icon">🏆</span>
+                <div>
+                    <h3>100 Items Recycled!</h3>
+                    <p>You've successfully diverted 100 items from landfills this month</p>
+                </div>
+            </div>
+            
+            <div class="milestone">
+                <span class="milestone-icon">🌱</span>
+                <div>
+                    <h3>Carbon Neutral Day</h3>
+                    <p>Yesterday you achieved a carbon-neutral footprint!</p>
+                </div>
+            </div>
+            
+            <div class="milestone">
+                <span class="milestone-icon">💚</span>
+                <div>
+                    <h3>Eco Warrior Status</h3>
+                    <p>You're in the top 10% of users for environmental impact</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize impact chart
+        const ctx = document.getElementById('impactChart').getContext('2d');
+        const impactChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [
+                    {
+                        label: 'CO₂ Saved (kg)',
+                        data: [45, 52, 68, 74, 63, 89],
+                        backgroundColor: 'rgba(46, 106, 77, 0.7)',
+                        borderColor: '#2e6a4d',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Items Recycled',
+                        data: [120, 145, 180, 165, 210, 247],
+                        backgroundColor: 'rgba(65, 90, 119, 0.7)',
+                        borderColor: '#415a77',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: { color: '#e0e1dd' }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { color: '#e0e1dd' },
+                        grid: { color: 'rgba(224, 225, 221, 0.1)' }
+                    },
+                    x: {
+                        ticks: { color: '#e0e1dd' },
+                        grid: { color: 'rgba(224, 225, 221, 0.1)' }
+                    }
+                }
+            }
+        });
+
+        // Animate numbers on page load
+        function animateValue(id, start, end, duration) {
+            const obj = document.getElementById(id);
+            if (!obj) return;
+            
+            const range = end - start;
+            const minTimer = 50;
+            let stepTime = Math.abs(Math.floor(duration / range));
+            stepTime = Math.max(stepTime, minTimer);
+            
+            const startTime = new Date().getTime();
+            const endTime = startTime + duration;
+            let timer;
+            
+            function run() {
+                const now = new Date().getTime();
+                const remaining = Math.max((endTime - now) / duration, 0);
+                const value = Math.round(end - (remaining * range));
+                obj.innerHTML = value;
+                if (value == end) {
+                    clearInterval(timer);
+                }
+            }
+            
+            timer = setInterval(run, stepTime);
+            run();
+        }
+
+        // Animate stats on load
+        window.onload = function() {
+            const statNumbers = document.querySelectorAll('.stat-number');
+            statNumbers.forEach(stat => {
+                const value = parseInt(stat.innerText);
+                stat.innerText = '0';
+                setTimeout(() => {
+                    animateValue(stat, 0, value, 2000);
+                }, 100);
+            });
+        };
+    </script>
+</body>
+</html>
