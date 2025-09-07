@@ -1,1 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eco Challenges - EcoVision AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background-color: #0d1b2a;
+            min-height: 100vh;
+            color: #e0e1dd;
+        }
+
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background-color: #1b263b;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            animation: slideDown 0.5s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header h1 {
+            color: #e0e1dd;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            background-color: #415a77;
+            color: #e0e1dd;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .nav-tab:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            background-color: #4c6b94;
+        }
+
+        .nav-tab.active {
+            background-color: #2e6a4d;
+        }
+
+        .card {
+            background-color: #1b263b;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .challenge-item {
+            background-color: #415a77;
+            color: #e0e1dd;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.3s ease;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .challenge-item:hover {
+            transform: translateX(10px);
+            background-color: #4c6b94;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: #2e6a4d;
+            border-radius: 15px;
+            transition: width 1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #e0e1dd;
+        }
+
+        .achievement {
+            display: inline-block;
+            background-color: #778da9;
+            color: #0d1b2a;
+            padding: 10px 20px;
+            border-radius: 50px;
+            margin: 5px;
+            animation: shine 2s infinite;
+        }
+
+        @keyframes shine {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .join-btn {
+            background-color: #2e6a4d;
+            color: #e0e1dd;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .join-btn:hover {
+            transform: scale(1.05);
+            background-color: #3a7d5c;
+        }
+
+        .points-badge {
+            font-size: 1.5em;
+            color: #2e6a4d;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <h1>Eco Challenges</h1>
+            <p>Complete challenges to earn points and save the planet!</p>
+        </div>
+
+        <div class="nav-tabs">
+            <a href="index.html" class="nav-tab">Waste Classifier</a>
+            <a href="carbontracker.html" class="nav-tab">Carbon Tracker</a>
+            <a href="ecochallenges.html" class="nav-tab active">Eco Challenges</a>
+            <a href="impactdashboard.html" class="nav-tab">Impact Dashboard</a>
+            <a href="community.html" class="nav-tab">Community</a>
+        </div>
+
+        <div class="card">
+            <h2>Weekly Challenges</h2>
+            
+            <div class="challenge-item">
+                <div style="flex: 1;">
+                    <h3>🚶 Car-Free Week</h3>
+                    <p>Use only sustainable transportation for 7 days</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 43%">3/7 days</div>
+                    </div>
+                </div>
+                <div>
+                    <span class="points-badge">+50 pts</span>
+                    <button class="join-btn">Continue</button>
+                </div>
+            </div>
+            
+            <div class="challenge-item">
+                <div style="flex: 1;">
+                    <h3>♻️ Recycling Master</h3>
+                    <p>Correctly sort 20 items</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 60%">12/20 items</div>
+                    </div>
+                </div>
+                <div>
+                    <span class="points-badge">+30 pts</span>
+                    <button class="join-btn">Continue</button>
+                </div>
+            </div>
+            
+            <div class="challenge-item">
+                <div style="flex: 1;">
+                    <h3>💡 Energy Saver</h3>
+                    <p>Reduce energy usage by 20%</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 75%">15% reduced</div>
+                    </div>
+                </div>
+                <div>
+                    <span class="points-badge">+40 pts</span>
+                    <button class="join-btn">Continue</button>
+                </div>
+            </div>
+            
+            <div class="challenge-item">
+                <div style="flex: 1;">
+                    <h3>🌱 Plant a Tree</h3>
+                    <p>Contribute to reforestation</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 100%">Completed!</div>
+                    </div>
+                </div>
+                <div>
+                    <span class="points-badge">+100 pts</span>
+                    <button class="join-btn" disabled>Done!</button>
+                </div>
+            </div>
+
+            <div class="challenge-item">
+                <div style="flex: 1;">
+                    <h3>💧 Water Conservation</h3>
+                    <p>Save 100 gallons of water this week</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 20%">20/100 gallons</div>
+                    </div>
+                </div>
+                <div>
+                    <span class="points-badge">+60 pts</span>
+                    <button class="join-btn">Join</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Your Achievements</h2>
+            <div>
+                <span class="achievement">🏅 First Recycler</span>
+                <span class="achievement">🌟 Week Warrior</span>
+                <span class="achievement">🌍 Earth Protector</span>
+                <span class="achievement">♻️ Waste Reducer</span>
+                <span class="achievement">🚴 Carbon Cutter</span>
+                <span class="achievement">🌳 Tree Hugger</span>
+                <span class="achievement">💚 Eco Champion</span>
+                <span class="achievement">🔋 Energy Expert</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Monthly Special Challenge</h2>
+            <div class="challenge-item" style="background: linear-gradient(135deg, #2e6a4d, #415a77);">
+                <div style="flex: 1;">
+                    <h3>🌍 Climate Action Hero</h3>
+                    <p>Complete all weekly challenges this month</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 65%; background: gold;">13/20 challenges</div>
+                    </div>
+                </div>
+                <div>
+                    <span class="points-badge" style="color: gold;">+500 pts</span>
+                    <button class="join-btn">Track Progress</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add interactivity
+        document.querySelectorAll('.join-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (!this.disabled) {
+                    alert('Challenge joined! Start making a difference today!');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
