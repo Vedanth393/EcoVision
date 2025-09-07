@@ -201,6 +201,35 @@
             padding-bottom: 0;
         }
 
+        .date-display {
+            text-align: center;
+            margin: 15px 0;
+            font-size: 1.1em;
+            color: #66b2ff;
+            font-weight: 500;
+        }
+
+        .history-controls {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+            align-items: center;
+        }
+
+        .history-btn {
+            background-color: #1e4976;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .history-btn:hover {
+            background-color: #2a5c8f;
+        }
+
         @media (max-width: 768px) {
             .comparison-container {
                 flex-direction: column;
@@ -213,6 +242,11 @@
             .nav-tab {
                 width: 100%;
             }
+            
+            .history-controls {
+                flex-direction: column;
+                gap: 10px;
+            }
         }
     </style>
 </head>
@@ -221,6 +255,7 @@
         <div class="header">
             <h1>Carbon Footprint Tracker</h1>
             <p>Monitor and reduce your daily carbon emissions</p>
+            <div class="date-display" id="currentDate">Sunday, September 7, 2025</div>
         </div>
 
         <div class="nav-tabs">
@@ -264,33 +299,33 @@
                 <div class="input-group">
                     <label>Transportation (daily distance):</label>
                     <select id="transportType">
-                        <option value="0">Walking/Cycling</option>
-                        <option value="2.3">Public Transport</option>
-                        <option value="4.6">Car (Electric)</option>
-                        <option value="7.6" selected>Car (Gasoline)</option>
-                        <option value="12">Car (SUV)</option>
+                        <option value="0">Walking/Cycling (0 kg/km)</option>
+                        <option value="0.05">Public Transport (0.05 kg/km)</option>
+                        <option value="0.11">Car (Electric) (0.11 kg/km)</option>
+                        <option value="0.19" selected>Car (Gasoline) (0.19 kg/km)</option>
+                        <option value="0.25">Car (SUV) (0.25 kg/km)</option>
                     </select>
                     <input type="number" id="transportDistance" placeholder="Distance (km)" value="20" min="0">
                 </div>
                 
                 <div class="input-group">
                     <label>Home Energy Usage:</label>
-                    <input type="number" id="energyUsage" placeholder="kWh per day" value="20" min="0">
-                    <p style="font-size: 0.85em; margin-top: 5px; color: #b6c2cf;">Average household: 30 kWh/day</p>
+                    <input type="number" id="energyUsage" placeholder="kWh per day" value="10" min="0">
+                    <p style="font-size: 0.85em; margin-top: 5px; color: #b6c2cf;">Average household: 10-15 kWh/day</p>
                 </div>
                 
                 <div class="input-group">
                     <label>Diet Type:</label>
                     <select id="dietType">
-                        <option value="2.5">Vegan</option>
-                        <option value="3.5">Vegetarian</option>
-                        <option value="5.5">Pescatarian</option>
-                        <option value="7.2" selected>Regular</option>
-                        <option value="10">Heavy Meat</option>
+                        <option value="2.5">Vegan (2.5 kg/day)</option>
+                        <option value="3.2">Vegetarian (3.2 kg/day)</option>
+                        <option value="4.1">Pescatarian (4.1 kg/day)</option>
+                        <option value="5.3" selected>Regular (5.3 kg/day)</option>
+                        <option value="7.1">Heavy Meat (7.1 kg/day)</option>
                     </select>
                 </div>
 
-                <button class="calculate-btn" onclick="calculateCarbon()">Calculate Carbon Footprint</button>
+                <button class="calculate-btn" onclick="calculateCarbon()">Save Today's Carbon Footprint</button>
             </div>
 
             <div class="comparison-container">
@@ -301,12 +336,12 @@
                 </div>
                 <div class="comparison-item">
                     <h4>Average Person</h4>
-                    <div class="comparison-value">30 kg</div>
+                    <div class="comparison-value">14 kg</div>
                     <p>CO₂ per day</p>
                 </div>
                 <div class="comparison-item">
                     <h4>Climate Target</h4>
-                    <div class="comparison-value">10 kg</div>
+                    <div class="comparison-value">5 kg</div>
                     <p>CO₂ per day</p>
                 </div>
             </div>
@@ -314,6 +349,11 @@
 
         <div class="card">
             <h2>CO₂ Emissions Trend</h2>
+            <div class="history-controls">
+                <button class="history-btn" onclick="changeWeek(-1)">Previous Week</button>
+                <span id="weekDisplay">Week starting Sep 7, 2025</span>
+                <button class="history-btn" onclick="changeWeek(1)">Next Week</button>
+            </div>
             <div class="chart-container">
                 <canvas id="carbonChart"></canvas>
             </div>
@@ -347,23 +387,43 @@
     </div>
 
     <script>
-        let carbonData = [];
+        let carbonData = {};
         let carbonChart;
+        let currentWeekOffset = 0; // 0 means current week
 
         // Initialize the page
         function initPage() {
+            setCurrentDate();
             loadStoredData();
             initChart();
             // Calculate with default values on page load
             calculateCarbon();
         }
 
+        // Set current date display
+        function setCurrentDate() {
+            const today = new Date(2025, 8, 7); // September 7, 2025 (0-indexed month)
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('currentDate').textContent = today.toLocaleDateString('en-US', options);
+        }
+
         // Load any stored data from localStorage
         function loadStoredData() {
-            const storedData = localStorage.getItem('carbonData');
+            const storedData = localStorage.getItem('carbonFootprintData');
             if (storedData) {
                 carbonData = JSON.parse(storedData);
+            } else {
+                // Initialize with empty data structure
+                carbonData = {
+                    entries: {},
+                    weeklyAverages: {}
+                };
             }
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('carbonFootprintData', JSON.stringify(carbonData));
         }
 
         // Initialize the chart
@@ -372,10 +432,10 @@
             carbonChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    labels: getWeekDays(currentWeekOffset),
                     datasets: [{
                         label: 'Daily CO₂ (kg)',
-                        data: carbonData.length > 0 ? carbonData : [0, 0, 0, 0, 0, 0, 0],
+                        data: getWeekData(currentWeekOffset),
                         borderColor: '#66b2ff',
                         backgroundColor: 'rgba(102, 178, 255, 0.1)',
                         tension: 0.3,
@@ -415,6 +475,91 @@
                     }
                 }
             });
+            
+            updateWeekDisplay();
+        }
+
+        // Get day names for the week
+        function getWeekDays(weekOffset) {
+            const baseDate = new Date(2025, 8, 7); // September 7, 2025 (Sunday)
+            const startDate = new Date(baseDate);
+            startDate.setDate(startDate.getDate() + (weekOffset * 7));
+            
+            // Find Sunday of this week
+            while (startDate.getDay() !== 0) {
+                startDate.setDate(startDate.getDate() - 1);
+            }
+            
+            const days = [];
+            for (let i = 0; i < 7; i++) {
+                const day = new Date(startDate);
+                day.setDate(day.getDate() + i);
+                days.push(day.toLocaleDateString('en-US', { weekday: 'short' }));
+            }
+            
+            return days;
+        }
+
+        // Get data for the week
+        function getWeekData(weekOffset) {
+            const baseDate = new Date(2025, 8, 7); // September 7, 2025
+            const startDate = new Date(baseDate);
+            startDate.setDate(startDate.getDate() + (weekOffset * 7));
+            
+            // Find Sunday of this week
+            while (startDate.getDay() !== 0) {
+                startDate.setDate(startDate.getDate() - 1);
+            }
+            
+            const weekData = [];
+            for (let i = 0; i < 7; i++) {
+                const currentDate = new Date(startDate);
+                currentDate.setDate(currentDate.getDate() + i);
+                const dateString = currentDate.toISOString().split('T')[0];
+                
+                if (carbonData.entries && carbonData.entries[dateString]) {
+                    weekData.push(carbonData.entries[dateString].total);
+                } else {
+                    weekData.push(0);
+                }
+            }
+            
+            return weekData;
+        }
+
+        // Update week display text
+        function updateWeekDisplay() {
+            const baseDate = new Date(2025, 8, 7); // September 7, 2025
+            const startDate = new Date(baseDate);
+            startDate.setDate(startDate.getDate() + (currentWeekOffset * 7));
+            
+            // Find Sunday of this week
+            while (startDate.getDay() !== 0) {
+                startDate.setDate(startDate.getDate() - 1);
+            }
+            
+            const endDate = new Date(startDate);
+            endDate.setDate(endDate.getDate() + 6);
+            
+            const options = { month: 'short', day: 'numeric', year: 'numeric' };
+            const displayText = `Week of ${startDate.toLocaleDateString('en-US', options)}`;
+            document.getElementById('weekDisplay').textContent = displayText;
+        }
+
+        // Change week view
+        function changeWeek(direction) {
+            currentWeekOffset += direction;
+            updateChart();
+        }
+
+        // Update the chart with new data
+        function updateChart() {
+            if (carbonChart) {
+                carbonChart.data.labels = getWeekDays(currentWeekOffset);
+                carbonChart.data.datasets[0].data = getWeekData(currentWeekOffset);
+                carbonChart.update();
+            }
+            updateWeekDisplay();
         }
 
         // Calculate carbon footprint
@@ -424,9 +569,9 @@
             const energy = parseFloat(document.getElementById('energyUsage').value) || 0;
             const diet = parseFloat(document.getElementById('dietType').value);
             
-            // Calculate emissions from each category
+            // Calculate emissions from each category (using accurate factors)
             const transportCO2 = transportFactor * distance;
-            const energyCO2 = energy * 0.5; // 0.5 kg CO2 per kWh (grid average)
+            const energyCO2 = energy * 0.4; // 0.4 kg CO2 per kWh (updated grid average)
             const dietCO2 = diet;
             
             // Total daily emissions
@@ -435,10 +580,10 @@
             // Update the display
             document.getElementById('dailyCO2').textContent = dailyCO2.toFixed(1);
             document.getElementById('weeklyCO2').textContent = (dailyCO2 * 7).toFixed(1);
-            document.getElementById('treesNeeded').textContent = Math.ceil(dailyCO2 * 365 / 21.77);
+            document.getElementById('treesNeeded').textContent = (dailyCO2 * 365 / 21.77).toFixed(1);
             
-            // Calculate savings compared to average (30kg/day)
-            const avgDaily = 30;
+            // Calculate savings compared to average (14kg/day)
+            const avgDaily = 14;
             const savings = Math.max(0, avgDaily - dailyCO2);
             document.getElementById('savings').textContent = savings.toFixed(1);
             
@@ -448,10 +593,21 @@
             document.getElementById('dietCO2').textContent = dietCO2.toFixed(1);
             document.getElementById('userDaily').textContent = dailyCO2.toFixed(1) + " kg";
             
-            // Store the data
-            carbonData.push(dailyCO2);
-            if (carbonData.length > 7) carbonData.shift();
-            localStorage.setItem('carbonData', JSON.stringify(carbonData));
+            // Store the data with today's date
+            const today = new Date(2025, 8, 7); // September 7, 2025
+            const dateString = today.toISOString().split('T')[0];
+            
+            if (!carbonData.entries) carbonData.entries = {};
+            
+            carbonData.entries[dateString] = {
+                date: dateString,
+                transport: transportCO2,
+                energy: energyCO2,
+                diet: dietCO2,
+                total: dailyCO2
+            };
+            
+            saveData();
             
             // Update the chart
             updateChart();
@@ -460,74 +616,66 @@
             generateInsights(transportCO2, energyCO2, dietCO2, dailyCO2);
         }
 
-        // Update the chart with new data
-        function updateChart() {
-            if (carbonChart) {
-                carbonChart.data.datasets[0].data = carbonData;
-                carbonChart.update();
-            }
-        }
-
         // Generate personalized insights
         function generateInsights(transportCO2, energyCO2, dietCO2, totalCO2) {
             const insightsContainer = document.getElementById('insights');
             let insightsHTML = '<h3>Personalized Reduction Tips</h3>';
             
             // Transportation insights
-            if (transportCO2 > 10) {
+            if (transportCO2 > 2) {
                 insightsHTML += `
                     <div class="insight-item">
                         <h4>Transportation</h4>
                         <p>Your transportation emits ${transportCO2.toFixed(1)} kg CO₂ daily. Consider:</p>
                         <ul>
-                            <li>Using public transport 2 days/week could save ${(transportCO2 * 0.4).toFixed(1)} kg CO₂ daily</li>
-                            <li>Working from home 1 day/week could save ${(transportCO2 * 0.2).toFixed(1)} kg CO₂ daily</li>
+                            <li>Using public transport 2 days/week could save ${(transportCO2 * 0.3).toFixed(1)} kg CO₂ daily</li>
+                            <li>Carpooling could reduce your transport emissions by 25-30%</li>
                         </ul>
                     </div>
                 `;
             }
             
             // Energy insights
-            if (energyCO2 > 5) {
+            if (energyCO2 > 3) {
                 insightsHTML += `
                     <div class="insight-item">
                         <h4>Home Energy</h4>
                         <p>Your home energy use emits ${energyCO2.toFixed(1)} kg CO₂ daily. Consider:</p>
                         <ul>
-                            <li>Switching to LED bulbs could save up to 0.5 kg CO₂ daily</li>
-                            <li>Using a programmable thermostat could save 1-2 kg CO₂ daily</li>
+                            <li>Switching to LED bulbs could save up to 0.3 kg CO₂ daily</li>
+                            <li>Unplugging electronics when not in use could save 0.5 kg CO₂ daily</li>
                         </ul>
                     </div>
                 `;
             }
             
             // Diet insights
-            if (dietCO2 > 5) {
+            if (dietCO2 > 4) {
                 insightsHTML += `
                     <div class="insight-item">
                         <h4>Diet</h4>
                         <p>Your food choices emit ${dietCO2.toFixed(1)} kg CO₂ daily. Consider:</p>
                         <ul>
-                            <li>Meat-free days could save ${(dietCO2 * 0.3).toFixed(1)} kg CO₂ per day</li>
-                            <li>Reducing food waste could save 1-2 kg CO₂ daily</li>
+                            <li>Meat-free days could save ${(dietCO2 * 0.2).toFixed(1)} kg CO₂ per day</li>
+                            <li>Buying local produce could reduce food transport emissions by 5-10%</li>
                         </ul>
                     </div>
                 `;
             }
             
             // Overall assessment
-            if (totalCO2 < 10) {
+            if (totalCO2 < 5) {
                 insightsHTML += `
                     <div class="insight-item">
-                        <h4>Great Job!</h4>
-                        <p>Your carbon footprint is below the climate target of 10 kg CO₂ per day. Keep up the good work!</p>
+                        <h4>Excellent!</h4>
+                        <p>Your carbon footprint is below the climate target of 5 kg CO₂ per day. You're making a significant positive impact!</p>
                     </div>
                 `;
-            } else if (totalCO2 < 20) {
+            } else if (totalCO2 < 10) {
                 insightsHTML += `
                     <div class="insight-item">
                         <h4>Good Progress</h4>
-                        <p>Your carbon footprint is better than average (30 kg), but there's room for improvement to reach the climate target of 10 kg CO₂ per day.</p>
+                        <p>Your carbon footprint is better than average (14 kg), but there's room for improvement to reach the climate target of 5 kg CO₂ per day.</p>
                     </div>
                 `;
             } else {
