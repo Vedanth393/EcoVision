@@ -174,17 +174,17 @@
     function build_recommendations(v){
       const recs=[];
       if(v.items_recycled<10){
-        recs.push({title:'quick win: recycle 5 more items',body:'Open Eco Challenges → Recycling Master and log items as you sort. Hitting 10 will bump your CO₂ savings noticeably.'});
+        recs.push({title:'Quick win: recycle 5 more items',body:'Open Eco Challenges → Recycling Master and log items as you sort. Hitting 10 will bump your CO₂ savings noticeably.'});
       }else{
-        recs.push({title:'level up recycling accuracy',body:'Target plastics #3–7 and cartons—sorting these correctly boosts avoided emissions.'});
+        recs.push({title:'Level up recycling accuracy',body:'Target plastics #3–7 and cartons—sorting these correctly boosts avoided emissions.'});
       }
       if(Number(v.energy_saved_kwh)<5){
-        recs.push({title:'capture easy energy savings',body:'Log an energy reduction in Eco Challenges (aim +5%). Try laundry/dishwasher off-peak and unplug idle chargers.'});
+        recs.push({title:'Capture easy energy savings',body:'Log an energy reduction in Eco Challenges (aim +5%). Try laundry/dishwasher off-peak and unplug idle chargers.'});
       }else{
-        recs.push({title:'keep the momentum',body:`Your estimated weekly energy saving is ~${v.energy_saved_kwh} kWh. Consider a smart power strip to lock in gains.`});
+        recs.push({title:'Keep the momentum',body:`Your estimated weekly energy saving is ~${v.energy_saved_kwh} kWh. Consider a smart power strip to lock in gains.`});
       }
       const sept_saved=(v.sept_co2_saved+v.eco_co2_saved).toFixed(1);
-      recs.push({title:'september focus',body:`You have ~${sept_saved} kg CO₂ saved showing for September. Aim for +20% by adding two car-free days this week.`});
+      recs.push({title:'September focus',body:`You have ~${sept_saved} kg CO₂ saved showing for September. Aim for +20% by adding two car-free days this week.`});
       const wrap=document.getElementById('recs');
       wrap.innerHTML=recs.map(r=>`<div class="recommendation-card"><h4>${r.title}</h4><p>${r.body}</p></div>`).join('');
     }
