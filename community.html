@@ -13,7 +13,7 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background-color: #0d1b2a;
+            background: linear-gradient(135deg, #0d1b2a 0%, #1b263b 100%);
             min-height: 100vh;
             color: #e0e1dd;
         }
@@ -25,12 +25,14 @@
         }
 
         .header {
-            background-color: #1b263b;
+            background: rgba(27, 38, 59, 0.8);
+            backdrop-filter: blur(10px);
             border-radius: 20px;
             padding: 30px;
             margin-bottom: 30px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             animation: slideDown 0.5s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         @keyframes slideDown {
@@ -42,6 +44,10 @@
             color: #e0e1dd;
             font-size: 2.5em;
             margin-bottom: 10px;
+            background: linear-gradient(45deg, #4cc9f0, #2e6a4d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(76, 201, 240, 0.3);
         }
 
         .nav-tabs {
@@ -52,7 +58,7 @@
         }
 
         .nav-tab {
-            background-color: #415a77;
+            background: rgba(65, 90, 119, 0.7);
             color: #e0e1dd;
             border: none;
             padding: 15px 30px;
@@ -62,25 +68,29 @@
             transition: all 0.3s ease;
             text-decoration: none;
             display: inline-block;
+            backdrop-filter: blur(5px);
         }
 
         .nav-tab:hover {
             transform: translateY(-3px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-            background-color: #4c6b94;
+            background: rgba(76, 107, 148, 0.8);
         }
 
         .nav-tab.active {
-            background-color: #2e6a4d;
+            background: rgba(46, 106, 77, 0.8);
+            box-shadow: 0 0 15px rgba(46, 106, 77, 0.5);
         }
 
         .card {
-            background-color: #1b263b;
+            background: rgba(27, 38, 59, 0.8);
+            backdrop-filter: blur(10px);
             border-radius: 20px;
             padding: 30px;
             margin-bottom: 20px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             animation: fadeIn 0.5s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         @keyframes fadeIn {
@@ -112,6 +122,7 @@
         .leaderboard-item.user {
             background: linear-gradient(135deg, rgba(46, 106, 77, 0.3), rgba(65, 90, 119, 0.3));
             border: 2px solid #2e6a4d;
+            box-shadow: 0 0 15px rgba(46, 106, 77, 0.3);
         }
 
         .rank {
@@ -120,11 +131,21 @@
             color: #e0e1dd;
             min-width: 50px;
             text-align: center;
+            font-weight: bold;
         }
 
-        .rank.gold { color: #FFD700; }
-        .rank.silver { color: #C0C0C0; }
-        .rank.bronze { color: #CD7F32; }
+        .rank.gold { 
+            color: #FFD700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        .rank.silver { 
+            color: #C0C0C0;
+            text-shadow: 0 0 10px rgba(192, 192, 192, 0.5);
+        }
+        .rank.bronze { 
+            color: #CD7F32;
+            text-shadow: 0 0 10px rgba(205, 127, 50, 0.5);
+        }
 
         .stats-grid {
             display: grid;
@@ -134,22 +155,27 @@
         }
 
         .stat-card {
-            background-color: #415a77;
+            background: linear-gradient(135deg, rgba(65, 90, 119, 0.7), rgba(46, 106, 77, 0.7));
             color: #e0e1dd;
             padding: 25px;
             border-radius: 15px;
             text-align: center;
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .stat-card:hover {
-            transform: scale(1.05);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
         }
 
         .stat-number {
             font-size: 2.5em;
             margin: 10px 0;
             animation: countUp 1s ease;
+            font-weight: bold;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
 
         @keyframes countUp {
@@ -158,7 +184,7 @@
         }
 
         .eco-tip {
-            background-color: #415a77;
+            background: linear-gradient(135deg, rgba(65, 90, 119, 0.5), rgba(27, 38, 59, 0.5));
             color: #e0e1dd;
             padding: 20px;
             border-radius: 15px;
@@ -167,6 +193,7 @@
             position: relative;
             overflow: hidden;
             border-left: 4px solid #2e6a4d;
+            backdrop-filter: blur(5px);
         }
 
         .eco-tip::before {
@@ -195,6 +222,7 @@
             align-items: center;
             justify-content: center;
             font-size: 1.5em;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
         .user-stats {
@@ -204,6 +232,7 @@
         .medal {
             font-size: 1.5em;
             margin-left: 10px;
+            filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.3));
         }
 
         .community-event {
@@ -212,16 +241,24 @@
             border-radius: 15px;
             margin: 10px 0;
             border: 1px solid #2e6a4d;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+
+        .community-event:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
 
         .event-date {
-            color: #2e6a4d;
+            color: #4cc9f0;
             font-weight: bold;
             margin-bottom: 5px;
+            font-size: 1.1em;
         }
 
         .join-event-btn {
-            background-color: #2e6a4d;
+            background: linear-gradient(135deg, #2e6a4d, #3a7d5c);
             color: #e0e1dd;
             border: none;
             padding: 10px 20px;
@@ -229,11 +266,54 @@
             cursor: pointer;
             margin-top: 10px;
             transition: all 0.3s ease;
+            font-weight: bold;
         }
 
         .join-event-btn:hover {
-            background-color: #3a7d5c;
+            background: linear-gradient(135deg, #3a7d5c, #2e6a4d);
             transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(46, 106, 77, 0.4);
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #2e6a4d, #4cc9f0);
+            border-radius: 4px;
+            width: 0%;
+            transition: width 1s ease;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #e0e1dd;
+            position: relative;
+            display: inline-block;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, #2e6a4d, #4cc9f0);
+            border-radius: 3px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #778da9;
+            font-style: italic;
         }
     </style>
 </head>
@@ -253,76 +333,25 @@
         </div>
 
         <div class="card">
-            <h2>Global Leaderboard</h2>
-            
-            <div class="leaderboard-item">
-                <span class="rank gold">1</span>
-                <div class="user-profile">
-                    <div class="avatar">👑</div>
-                    <div class="user-stats">
-                        <strong>EcoWarrior23</strong>
-                        <p>12,450 points • 523kg CO₂ saved</p>
-                    </div>
-                </div>
-                <span class="medal">🏆</span>
-            </div>
-            
-            <div class="leaderboard-item">
-                <span class="rank silver">2</span>
-                <div class="user-profile">
-                    <div class="avatar">🌟</div>
-                    <div class="user-stats">
-                        <strong>GreenThumb</strong>
-                        <p>11,200 points • 487kg CO₂ saved</p>
-                    </div>
-                </div>
-                <span class="medal">🥈</span>
-            </div>
-            
-            <div class="leaderboard-item">
-                <span class="rank bronze">3</span>
-                <div class="user-profile">
-                    <div class="avatar">🌿</div>
-                    <div class="user-stats">
-                        <strong>PlanetSaver</strong>
-                        <p>10,800 points • 465kg CO₂ saved</p>
-                    </div>
-                </div>
-                <span class="medal">🥉</span>
-            </div>
-            
-            <div class="leaderboard-item">
-                <span class="rank">4</span>
-                <div class="user-profile">
-                    <div class="avatar">🌍</div>
-                    <div class="user-stats">
-                        <strong>EarthDefender</strong>
-                        <p>9,500 points • 412kg CO₂ saved</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="leaderboard-item">
-                <span class="rank">5</span>
-                <div class="user-profile">
-                    <div class="avatar">♻️</div>
-                    <div class="user-stats">
-                        <strong>RecycleHero</strong>
-                        <p>8,900 points • 389kg CO₂ saved</p>
-                    </div>
-                </div>
-            </div>
+            <h2>Your Impact Leaderboard</h2>
             
             <div class="leaderboard-item user">
-                <span class="rank">47</span>
+                <span class="rank">1</span>
                 <div class="user-profile">
                     <div class="avatar">😊</div>
                     <div class="user-stats">
                         <strong>You</strong>
-                        <p>3,250 points • 89kg CO₂ saved</p>
+                        <p>0 points • <span id="userCO2Saved">0</span> kg CO₂ saved</p>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="userProgress"></div>
+                        </div>
                     </div>
                 </div>
                 <span class="medal">⭐</span>
+            </div>
+            
+            <div class="empty-state">
+                <p>You're the first in your community! Invite friends to join the leaderboard.</p>
             </div>
         </div>
 
@@ -331,48 +360,48 @@
             <div class="stats-grid">
                 <div class="stat-card">
                     <h3>Total CO₂ Saved</h3>
-                    <div class="stat-number">45.2K</div>
-                    <p>tons this year</p>
+                    <div class="stat-number" id="totalCO2Saved">0</div>
+                    <p>kg this year</p>
                 </div>
                 <div class="stat-card">
                     <h3>Active Users</h3>
-                    <div class="stat-number">128K</div>
-                    <p>worldwide</p>
+                    <div class="stat-number" id="activeUsers">1</div>
+                    <p>in your community</p>
                 </div>
                 <div class="stat-card">
                     <h3>Items Recycled</h3>
-                    <div class="stat-number">2.3M</div>
+                    <div class="stat-number" id="itemsRecycled">0</div>
                     <p>this month</p>
                 </div>
                 <div class="stat-card">
-                    <h3>Countries</h3>
-                    <div class="stat-number">94</div>
-                    <p>participating</p>
+                    <h3>Challenges Completed</h3>
+                    <div class="stat-number" id="challengesCompleted">0</div>
+                    <p>by the community</p>
                 </div>
             </div>
         </div>
 
         <div class="card">
-            <h2>Community Events</h2>
+            <h2>Upcoming Community Events</h2>
             
             <div class="community-event">
-                <div class="event-date">Saturday, March 25 - 10:00 AM</div>
-                <h3>🌳 Community Tree Planting Day</h3>
-                <p>Join us for a day of tree planting in Central Park. Help us reach our goal of 1,000 trees!</p>
+                <div class="event-date" id="event1Date"></div>
+                <h3>🌳 Neighborhood Cleanup Day</h3>
+                <p>Join your local community for a cleanup event at the park. Gloves and bags provided!</p>
                 <button class="join-event-btn">Join Event</button>
             </div>
             
             <div class="community-event">
-                <div class="event-date">Every Sunday - 9:00 AM</div>
-                <h3>🏃 Eco Run Challenge</h3>
-                <p>Combine fitness with environmental cleanup. Run, jog, or walk while collecting litter!</p>
+                <div class="event-date" id="event2Date"></div>
+                <h3>🏃‍♂️ Zero Waste Run Challenge</h3>
+                <p>Combine fitness with environmental awareness. Collect litter while you run!</p>
                 <button class="join-event-btn">Join Event</button>
             </div>
             
             <div class="community-event">
-                <div class="event-date">April 1-7</div>
-                <h3>🌍 Global Waste Reduction Week</h3>
-                <p>A week-long challenge to minimize waste production. Share tips and track progress!</p>
+                <div class="event-date" id="event3Date"></div>
+                <h3>🌍 Sustainable Living Workshop</h3>
+                <p>Learn practical tips for reducing your carbon footprint in everyday life.</p>
                 <button class="join-event-btn">Register Now</button>
             </div>
         </div>
@@ -398,23 +427,90 @@
     </div>
 
     <script>
+        // Get carbon data from localStorage
+        function getCarbonData() {
+            const carbonData = localStorage.getItem('carbonFootprintData');
+            if (carbonData) {
+                return JSON.parse(carbonData);
+            }
+            return null;
+        }
+
+        // Calculate CO2 savings based on carbon tracker data
+        function calculateCO2Savings() {
+            const carbonData = getCarbonData();
+            let totalSavings = 0;
+            
+            if (carbonData && carbonData.entries) {
+                const entries = Object.values(carbonData.entries);
+                
+                entries.forEach(entry => {
+                    // Compare to average of 14kg per day
+                    const dailySavings = Math.max(0, 14 - entry.total);
+                    totalSavings += dailySavings;
+                });
+            }
+            
+            return totalSavings;
+        }
+
+        // Update leaderboard with user's data
+        function updateLeaderboard() {
+            const co2Saved = calculateCO2Savings();
+            document.getElementById('userCO2Saved').textContent = co2Saved.toFixed(1);
+            
+            // Update progress bar (scale: 0-50kg for visual representation)
+            const progressPercent = Math.min(100, (co2Saved / 50) * 100);
+            document.getElementById('userProgress').style.width = `${progressPercent}%`;
+            
+            // Update community stats
+            document.getElementById('totalCO2Saved').textContent = co2Saved.toFixed(1);
+        }
+
+        // Set up event dates for the next 3 weeks
+        function setupEventDates() {
+            const today = new Date();
+            const event1Date = new Date(today);
+            const event2Date = new Date(today);
+            const event3Date = new Date(today);
+            
+            // Set events for the next three Saturdays
+            event1Date.setDate(today.getDate() + (6 - today.getDay() + 7) % 7);
+            event2Date.setDate(event1Date.getDate() + 7);
+            event3Date.setDate(event2Date.getDate() + 7);
+            
+            // Format dates
+            const options = { weekday: 'long', month: 'long', day: 'numeric' };
+            document.getElementById('event1Date').textContent = event1Date.toLocaleDateString('en-US', options);
+            document.getElementById('event2Date').textContent = event2Date.toLocaleDateString('en-US', options);
+            document.getElementById('event3Date').textContent = event3Date.toLocaleDateString('en-US', options);
+        }
+
         // Add event listeners for join buttons
         document.querySelectorAll('.join-event-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 alert('Event joined! You will receive more details via email.');
                 this.textContent = 'Joined!';
-                this.style.backgroundColor = '#778da9';
+                this.style.background = 'linear-gradient(135deg, #778da9, #415a77)';
+                this.disabled = true;
             });
         });
 
-        // Animate numbers on load
+        // Initialize page
         window.onload = function() {
+            // Animate numbers on load
             const statNumbers = document.querySelectorAll('.stat-number');
             statNumbers.forEach((stat, index) => {
                 setTimeout(() => {
                     stat.style.animation = 'countUp 1s ease forwards';
                 }, index * 100);
             });
+            
+            // Update leaderboard with real data
+            updateLeaderboard();
+            
+            // Set up event dates
+            setupEventDates();
         };
     </script>
 </body>
