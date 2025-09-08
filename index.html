@@ -473,7 +473,7 @@
     </div>
 
     <script>
-        // Global variables
+       
         let model;
         let ecoScore = 0;
         let classifications = [];
@@ -483,49 +483,49 @@
             monthly: []
         };
 
-        // Initialize the app
+        
         async function initApp() {
-            // Load TensorFlow model
+            
             try {
                 model = await mobilenet.load();
                 console.log('AI Model loaded successfully');
             } catch (error) {
                 console.error('Error loading model:', error);
-                // Fallback to mock classification if model fails to load
+                
                 console.log('Using mock classification as fallback');
             }
 
-            // Initialize camera
+           
             initCamera();
             
-            // Load saved data
+            
             loadUserData();
             
-            // Update displays
+          
             updateEcoScore();
             
-            // Set up tab switching
+           
             setupTabSwitching();
         }
 
-        // Set up tab switching functionality
+        
         function setupTabSwitching() {
             const tabs = document.querySelectorAll('.nav-tab');
             
             tabs.forEach(tab => {
                 tab.addEventListener('click', function() {
-                    // Remove active class from all tabs
+                    
                     tabs.forEach(t => t.classList.remove('active'));
                     
-                    // Add active class to clicked tab
+                    
                     this.classList.add('active');
                     
-                    // Hide all content panels
+                    
                     document.querySelectorAll('.content-panel').forEach(panel => {
                         panel.classList.remove('active');
                     });
                     
-                    // Show the selected content panel
+                    
                     const tabName = this.getAttribute('data-tab');
                     if (tabName) {
                         document.getElementById(tabName).classList.add('active');
@@ -534,7 +534,7 @@
             });
         }
 
-        // Camera initialization
+       
         async function initCamera() {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ 
@@ -544,13 +544,13 @@
                 video.srcObject = stream;
             } catch (error) {
                 console.log('Camera not available:', error);
-                // Show a placeholder message
+                
                 const cameraContainer = document.querySelector('.camera-container');
                 cameraContainer.innerHTML = '<p style="color: white; padding: 20px; text-align: center;">Camera access is required for waste classification. Please enable camera permissions.</p>';
             }
         }
 
-        // Capture image from webcam
+        
         function captureImage() {
             const video = document.getElementById('webcam');
             const canvas = document.getElementById('canvas');
@@ -560,17 +560,17 @@
             canvas.height = video.videoHeight;
             context.drawImage(video, 0, 0);
             
-            // Show captured image
+            
             const img = document.getElementById('uploadedImage');
             img.src = canvas.toDataURL();
             img.style.display = 'block';
             video.style.display = 'none';
             
-            // Show analyze button
+            
             document.getElementById('analyzeBtn').style.display = 'inline-block';
         }
 
-        // Handle file upload
+        
         function handleFileUpload(event) {
             const file = event.target.files[0];
             if (file) {
@@ -586,7 +586,7 @@
             }
         }
 
-        // Analyze waste with AI
+        
         async function analyzeWaste() {
             const loading = document.getElementById('loading');
             const resultContainer = document.getElementById('wasteResult');
@@ -596,12 +596,12 @@
             try {
                 const img = document.getElementById('uploadedImage');
                 
-                // Get AI predictions
+                
                 let predictions;
                 if (model) {
                     predictions = await model.classify(img);
                 } else {
-                    // Mock predictions if model failed to load
+                    
                     predictions = [
                         { className: 'plastic bottle', probability: 0.92 },
                         { className: 'water bottle', probability: 0.87 },
@@ -609,16 +609,16 @@
                     ];
                 }
                 
-                // Process predictions for waste classification
+               
                 const wasteType = classifyWasteType(predictions);
                 
-                // Update display
+                
                 displayWasteResults(wasteType, predictions);
                 
-                // Save to history
+                
                 saveClassification(wasteType);
                 
-                // Update eco score
+                
                 updateEcoScore(10);
                 
                 loading.classList.remove('show');
@@ -628,18 +628,18 @@
                 console.error('Error analyzing image:', error);
                 loading.classList.remove('show');
                 
-                // Show error message
+                
                 document.getElementById('classificationResult').innerHTML = 
                     '<p>Error analyzing image. Please try again.</p>';
                 resultContainer.classList.add('show');
             }
         }
 
-        // Classify waste type based on AI predictions
+       
         function classifyWasteType(predictions) {
             const item = predictions[0]?.className?.toLowerCase() || '';
             
-            // Advanced waste classification logic
+            
             const wasteCategories = {
                 recyclable: ['bottle', 'can', 'paper', 'cardboard', 'plastic', 'container', 'package', 'box', 'newspaper', 'magazine'],
                 compost: ['banana', 'apple', 'orange', 'food', 'vegetable', 'fruit', 'plant', 'flower', 'grass', 'leaves'],
@@ -654,16 +654,16 @@
                 }
             }
             
-            return 'landfill'; // Default category
+            return 'landfill'; 
         }
 
-        // Display waste classification results
+        
         function displayWasteResults(wasteType, predictions) {
             const resultDiv = document.getElementById('classificationResult');
             const instructionsDiv = document.getElementById('disposalInstructions');
             const suggestionsDiv = document.getElementById('alternativeSuggestions');
             
-            // Classification badges
+            
             const badges = {
                 recyclable: '<span class="waste-category recyclable">Recyclable</span>',
                 compost: '<span class="waste-category compost">Compostable</span>',
@@ -672,7 +672,7 @@
                 landfill: '<span class="waste-category landfill">Landfill</span>'
             };
             
-            // Disposal instructions
+            
             const instructions = {
                 recyclable: 'Clean and place in the blue recycling bin. Remove any food residue and flatten if possible.',
                 compost: 'Place in the green compost bin or add to your home composting system.',
@@ -681,7 +681,7 @@
                 landfill: 'Place in the black landfill bin. Consider if there are any reusable parts first.'
             };
             
-            // Eco alternatives
+            
             const alternatives = {
                 recyclable: 'Consider reusable alternatives to reduce packaging waste.',
                 compost: 'Start a home compost bin for your food scraps to create nutrient-rich soil.',
@@ -690,7 +690,7 @@
                 landfill: 'Try to reduce consumption of single-use items that end up in landfill.'
             };
             
-            // Update the UI
+            
             resultDiv.innerHTML = `
                 <p>Detected: ${predictions[0]?.className || 'Unknown item'}</p>
                 <p>Waste Category: ${badges[wasteType] || badges.landfill}</p>
@@ -708,7 +708,7 @@
             `;
         }
 
-        // Save classification to history
+        
         function saveClassification(wasteType) {
             const item = document.getElementById('uploadedImage').src;
             const timestamp = new Date().toLocaleString();
@@ -719,14 +719,14 @@
                 timestamp: timestamp
             });
             
-            // Update recent classifications
+            
             updateRecentClassifications();
             
-            // Save to localStorage
+           
             localStorage.setItem('classifications', JSON.stringify(classifications));
         }
 
-        // Update recent classifications display
+        
         function updateRecentClassifications() {
             const container = document.getElementById('recentClassifications');
             const recent = classifications.slice(0, 5);
@@ -747,25 +747,25 @@
             `).join('');
         }
 
-        // Update eco score
+       
         function updateEcoScore(points = 0) {
             ecoScore += points;
             document.getElementById('ecoScore').textContent = ecoScore;
             
-            // Save to localStorage
+           
             localStorage.setItem('ecoScore', ecoScore);
         }
 
-        // Load user data from localStorage
+        
         function loadUserData() {
-            // Load eco score
+           
             const savedEcoScore = localStorage.getItem('ecoScore');
             if (savedEcoScore) {
                 ecoScore = parseInt(savedEcoScore);
                 document.getElementById('ecoScore').textContent = ecoScore;
             }
             
-            // Load classifications
+           
             const savedClassifications = localStorage.getItem('classifications');
             if (savedClassifications) {
                 classifications = JSON.parse(savedClassifications);
@@ -773,9 +773,10 @@
             }
         }
 
-        // Initialize the app when the page loads
+       
         window.onload = initApp;
     </script>
 </body>
 </html>
+
 
