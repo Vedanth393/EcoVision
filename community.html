@@ -90,7 +90,7 @@
             margin-bottom: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             animation: fadeIn 0.5s ease;
-            border: 1px solid rgba(255, 255, 255, 极速4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         @keyframes fadeIn {
@@ -155,7 +155,7 @@
         }
 
         .stat-card {
-            background: linear-gradient(135deg, rgba(65, 90, 119, 极速7), rgba(46, 106, 77, 0.7));
+            background: linear-gradient(135deg, rgba(65, 90, 119, 0.5), rgba(46, 106, 77, 0.7));
             color: #e0e1dd;
             padding: 25px;
             border-radius: 15px;
@@ -175,7 +175,7 @@
             margin: 10px 0;
             animation: countUp 1s ease;
             font-weight: bold;
-            text-shadow: 0 2px 10px rgba极速, 0, 0, 0.3);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
 
         @keyframes countUp {
@@ -222,7 +222,7 @@
             align-items: center;
             justify-content: center;
             font-size: 1.5em;
-            box-shadow: 0 5px 极速5px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
         .user-stats {
@@ -236,11 +236,11 @@
         }
 
         .community-event {
-            background: linear-gradient(135极速, rgba(46, 106, 77, 0.2), rgba(65, 90, 119, 0.2));
+            background: linear-gradient(135deg, rgba(46, 106, 77, 0.2), rgba(65, 90, 119, 0.2));
             padding: 20px;
             border-radius: 15px;
             margin: 10px 0;
-            border: 1px solid #2e6a4极速;
+            border: 1px solid #2e6a4d;
             backdrop-filter: blur(5px);
             transition: all 0.3s ease;
         }
@@ -261,7 +261,7 @@
             background: linear-gradient(135deg, #2e6a4d, #3a7d5c);
             color: #e0e1dd;
             border: none;
-            padding: 10极速 20px;
+            padding: 10px 20px;
             border-radius: 50px;
             cursor: pointer;
             margin-top: 10px;
@@ -319,7 +319,7 @@
 </head>
 <body>
     <div class="app-container">
-        <div class极速="header">
+        <div class="header">
             <h1>Community Hub</h1>
             <p>Connect with eco-warriors around the world</p>
         </div>
@@ -375,7 +375,7 @@
                 </div>
                 <div class="stat-card">
                     <h3>Challenges Completed</h3>
-                    <div class="stat-number"极速="challengesCompleted">0</div>
+                    <div class="stat-number" id="challengesCompleted">0</div>
                     <p>by the community</p>
                 </div>
             </div>
@@ -419,7 +419,7 @@
                 to power a TV for 3 hours. Start collecting cans today!
             </div>
             
-            <div class="eco极速-tip">
+            <div class="eco-tip">
                 <strong>Quick Win:</strong> Turn off lights when leaving a room. 
                 This can save up to 10% on your electricity bill and reduce CO₂ emissions.
             </div>
@@ -483,8 +483,11 @@
                 }
             }
             
+            // Subtract 0.9 kg from the total CO2 saved for the leaderboard
+            const adjustedCO2Saved = Math.max(0, totalCO2Saved - 0.9);
+            
             return {
-                totalCO2Saved,
+                totalCO2Saved: adjustedCO2Saved,
                 totalPoints,
                 itemsRecycled,
                 challengesCompleted
@@ -518,7 +521,7 @@
             
             // Set events for the next three Saturdays
             event1Date.setDate(today.getDate() + (6 - today.getDay() + 7) % 7);
-            event2极速Date.setDate(event1Date.getDate() + 7);
+            event2Date.setDate(event1Date.getDate() + 7);
             event3Date.setDate(event2Date.getDate() + 7);
             
             // Format dates
