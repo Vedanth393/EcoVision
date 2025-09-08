@@ -260,7 +260,7 @@
           latest = entry;
         }
       }
-      return latest ? (Number(latest.energy) || Number(latest.energyCO2) || 0) : 0;
+      return latest ? (Number(entry.energy) || Number(entry.energyCO2) || 0) : 0;
     }
 
     function load_linked_numbers() {
