@@ -427,21 +427,21 @@
     </div>
 
     <script>
-        // Get data from both Carbon Tracker and Eco Challenges
+       
         function getCombinedData() {
             let totalCO2Saved = 0;
             let totalPoints = 0;
             let itemsRecycled = 0;
             let challengesCompleted = 0;
             
-            // Get data from Carbon Tracker
+          
             const carbonData = localStorage.getItem('carbonFootprintData');
             if (carbonData) {
                 try {
                     const carbon = JSON.parse(carbonData);
                     if (carbon.entries) {
                         Object.values(carbon.entries).forEach(entry => {
-                            // Calculate savings compared to average (14kg/day)
+                            
                             const dailySavings = Math.max(0, 14 - entry.total);
                             totalCO2Saved += dailySavings;
                         });
@@ -451,28 +451,28 @@
                 }
             }
             
-            // Get data from Eco Challenges
+            
             const ecoData = localStorage.getItem('ecoUserData_v1');
             if (ecoData) {
                 try {
                     const eco = JSON.parse(ecoData);
                     
-                    // Add CO2 savings from challenges
+                    
                     if (eco.impact && eco.impact.co2) {
                         totalCO2Saved += eco.impact.co2;
                     }
                     
-                    // Get points
+                   
                     if (eco.points) {
                         totalPoints = eco.points;
                     }
                     
-                    // Get recycled items count
+                    
                     if (eco.challenges && eco.challenges.recycling && eco.challenges.recycling.current) {
                         itemsRecycled = eco.challenges.recycling.current;
                     }
                     
-                    // Count completed challenges
+                    
                     if (eco.challenges) {
                         challengesCompleted = Object.values(eco.challenges).filter(
                             challenge => challenge.completed
@@ -483,7 +483,7 @@
                 }
             }
             
-            // Subtract 0.9 kg from the total CO2 saved for the leaderboard
+            
             const adjustedCO2Saved = Math.max(0, totalCO2Saved - 0.9);
             
             return {
@@ -494,44 +494,44 @@
             };
         }
 
-        // Update leaderboard with combined data
+        
         function updateLeaderboard() {
             const data = getCombinedData();
             
-            // Update user stats
+            
             document.getElementById('userCO2Saved').textContent = data.totalCO2Saved.toFixed(1);
             document.getElementById('userPoints').textContent = data.totalPoints;
             
-            // Update progress bar (scale: 0-100kg for visual representation)
+            
             const progressPercent = Math.min(100, (data.totalCO2Saved / 100) * 100);
             document.getElementById('userProgress').style.width = `${progressPercent}%`;
             
-            // Update community stats
+            
             document.getElementById('totalCO2Saved').textContent = data.totalCO2Saved.toFixed(1);
             document.getElementById('itemsRecycled').textContent = data.itemsRecycled;
             document.getElementById('challengesCompleted').textContent = data.challengesCompleted;
         }
 
-        // Set up event dates for the next 3 weeks
+        
         function setupEventDates() {
             const today = new Date();
             const event1Date = new Date(today);
             const event2Date = new Date(today);
             const event3Date = new Date(today);
             
-            // Set events for the next three Saturdays
+            
             event1Date.setDate(today.getDate() + (6 - today.getDay() + 7) % 7);
             event2Date.setDate(event1Date.getDate() + 7);
             event3Date.setDate(event2Date.getDate() + 7);
             
-            // Format dates
+            
             const options = { weekday: 'long', month: 'long', day: 'numeric' };
             document.getElementById('event1Date').textContent = event1Date.toLocaleDateString('en-US', options);
             document.getElementById('event2Date').textContent = event2Date.toLocaleDateString('en-US', options);
             document.getElementById('event3Date').textContent = event3Date.toLocaleDateString('en-US', options);
         }
 
-        // Add event listeners for join buttons
+        
         document.querySelectorAll('.join-event-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 alert('Event joined! You will receive more details via email.');
@@ -541,9 +541,9 @@
             });
         });
 
-        // Initialize page
+        
         window.onload = function() {
-            // Animate numbers on load
+            
             const statNumbers = document.querySelectorAll('.stat-number');
             statNumbers.forEach((stat, index) => {
                 setTimeout(() => {
@@ -551,13 +551,11 @@
                 }, index * 100);
             });
             
-            // Update leaderboard with real data
+            
             updateLeaderboard();
             
-            // Set up event dates
-            setupEventDates();
+           setupEventDates();
             
-            // Refresh data every minute
             setInterval(updateLeaderboard, 60000);
         };
     </script>
