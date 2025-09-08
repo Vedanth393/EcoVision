@@ -504,31 +504,31 @@
     <script>
         let carbonData = {};
         let carbonChart;
-        let currentWeekOffset = 0; // 0 means current week
+        let currentWeekOffset = 0; 
 
-        // Initialize the page
+       
         function initPage() {
             setCurrentDate();
             loadStoredData();
             initChart();
-            // Calculate with default values on page load
+            
             calculateCarbon();
         }
 
-        // Set current date display
+       
         function setCurrentDate() {
-            const today = new Date(); // Use current date
+            const today = new Date(); 
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             document.getElementById('currentDate').textContent = today.toLocaleDateString('en-US', options);
         }
 
-        // Load any stored data from localStorage
+        
         function loadStoredData() {
             const storedData = localStorage.getItem('carbonFootprintData');
             if (storedData) {
                 carbonData = JSON.parse(storedData);
             } else {
-                // Initialize with empty data structure
+                
                 carbonData = {
                     entries: {},
                     weeklyAverages: {}
@@ -536,12 +536,12 @@
             }
         }
 
-        // Save data to localStorage
+        
         function saveData() {
             localStorage.setItem('carbonFootprintData', JSON.stringify(carbonData));
         }
 
-        // Initialize the chart
+       
         function initChart() {
             const ctx = document.getElementById('carbonChart').getContext('2d');
             carbonChart = new Chart(ctx, {
@@ -626,13 +626,13 @@
             updateWeekDisplay();
         }
 
-        // Get day names for the week
+        
         function getWeekDays(weekOffset) {
-            const today = new Date(); // Use current date
+            const today = new Date(); 
             const startDate = new Date(today);
             startDate.setDate(startDate.getDate() + (weekOffset * 7));
             
-            // Find Sunday of this week
+            
             while (startDate.getDay() !== 0) {
                 startDate.setDate(startDate.getDate() - 1);
             }
@@ -647,13 +647,13 @@
             return days;
         }
 
-        // Get data for the week
+        
         function getWeekData(weekOffset) {
-            const today = new Date(); // Use current date
+            const today = new Date(); 
             const startDate = new Date(today);
             startDate.setDate(startDate.getDate() + (weekOffset * 7));
             
-            // Find Sunday of this week
+            
             while (startDate.getDay() !== 0) {
                 startDate.setDate(startDate.getDate() - 1);
             }
@@ -674,13 +674,13 @@
             return weekData;
         }
 
-        // Update week display text
+        
         function updateWeekDisplay() {
-            const today = new Date(); // Use current date
+            const today = new Date(); 
             const startDate = new Date(today);
             startDate.setDate(startDate.getDate() + (currentWeekOffset * 7));
             
-            // Find Sunday of this week
+            
             while (startDate.getDay() !== 0) {
                 startDate.setDate(startDate.getDate() - 1);
             }
@@ -693,13 +693,13 @@
             document.getElementById('weekDisplay').textContent = displayText;
         }
 
-        // Change week view
+        
         function changeWeek(direction) {
             currentWeekOffset += direction;
             updateChart();
         }
 
-        // Update the chart with new data
+        
         function updateChart() {
             if (carbonChart) {
                 carbonChart.data.labels = getWeekDays(currentWeekOffset);
@@ -709,39 +709,39 @@
             updateWeekDisplay();
         }
 
-        // Calculate carbon footprint
+       
         function calculateCarbon() {
             const transportFactor = parseFloat(document.getElementById('transportType').value);
             const distance = parseFloat(document.getElementById('transportDistance').value) || 0;
             const energy = parseFloat(document.getElementById('energyUsage').value) || 0;
             const diet = parseFloat(document.getElementById('dietType').value);
             
-            // Calculate emissions from each category (using accurate factors)
+            
             const transportCO2 = transportFactor * distance;
-            const energyCO2 = energy * 0.4; // 0.4 kg CO2 per kWh (updated grid average)
+            const energyCO2 = energy * 0.4; 
             const dietCO2 = diet;
             
-            // Total daily emissions
+           
             const dailyCO2 = transportCO2 + energyCO2 + dietCO2;
             
-            // Update the display
+            
             document.getElementById('dailyCO2').textContent = dailyCO2.toFixed(1);
             document.getElementById('weeklyCO2').textContent = (dailyCO2 * 7).toFixed(1);
             document.getElementById('treesNeeded').textContent = (dailyCO2 * 365 / 21.77).toFixed(1);
             
-            // Calculate savings compared to average (14kg/day)
+            
             const avgDaily = 14;
             const savings = Math.max(0, avgDaily - dailyCO2);
             document.getElementById('savings').textContent = savings.toFixed(1);
             
-            // Update breakdown
+           
             document.getElementById('transportCO2').textContent = transportCO2.toFixed(1);
             document.getElementById('energyCO2').textContent = energyCO2.toFixed(1);
             document.getElementById('dietCO2').textContent = dietCO2.toFixed(1);
             document.getElementById('userDaily').textContent = dailyCO2.toFixed(1) + " kg";
             
-            // Store the data with today's date
-            const today = new Date(); // Use current date
+            
+            const today = new Date(); 
             const dateString = today.toISOString().split('T')[0];
             
             if (!carbonData.entries) carbonData.entries = {};
@@ -756,19 +756,19 @@
             
             saveData();
             
-            // Update the chart
+            
             updateChart();
             
-            // Generate insights
+            
             generateInsights(transportCO2, energyCO2, dietCO2, dailyCO2);
         }
 
-        // Generate personalized insights
+        
         function generateInsights(transportCO2, energyCO2, dietCO2, totalCO2) {
             const insightsContainer = document.getElementById('insights');
             let insightsHTML = '<h3>Personalized Reduction Tips</h3>';
             
-            // Transportation insights
+            
             if (transportCO2 > 2) {
                 insightsHTML += `
                     <div class="insight-item">
@@ -782,7 +782,7 @@
                 `;
             }
             
-            // Energy insights
+           
             if (energyCO2 > 3) {
                 insightsHTML += `
                     <div class="insight-item">
@@ -796,7 +796,7 @@
                 `;
             }
             
-            // Diet insights
+           
             if (dietCO2 > 4) {
                 insightsHTML += `
                     <div class="insight-item">
@@ -810,7 +810,7 @@
                 `;
             }
             
-            // Overall assessment
+            
             if (totalCO2 < 5) {
                 insightsHTML += `
                     <div class="insight-item">
@@ -837,7 +837,7 @@
             insightsContainer.innerHTML = insightsHTML;
         }
 
-        // Initialize the page when it loads
+        
         window.onload = initPage;
     </script>
 </body>
